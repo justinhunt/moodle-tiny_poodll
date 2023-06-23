@@ -1,0 +1,11 @@
+<form class="tiny_poodll_form" id="{{elementid}}_tiny_poodll_form">
+    {{> tiny_cloudpoodll/menu}}
+    <div class="root tab-content">
+      {{#isvideo}}{{> tiny_poodll/videopanel}}{{/isvideo}}
+      {{#isaudio}}{{> tiny_poodll/audiopanel}}{{/isaudio}}
+      {{#isscreen}}{{> tiny_poodll/screenpanel}}{{/isscreen}}
+      {{^isscreen}}{{> tiny_poodll/uploadpanel}}{{/isscreen}}
+      {{> atto_cloudpoodll/optionspanel}}
+      {{#showhistory}}{{> tiny_poodll/historypanel}}{{/showhistory}}
+    </div>
+</form>

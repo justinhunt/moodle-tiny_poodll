@@ -43,6 +43,10 @@ const showhistoryName = getPluginOptionName(pluginName, 'showhistory');
 const showoptionsName = getPluginOptionName(pluginName, 'showoptions');
 const showuploadName = getPluginOptionName(pluginName, 'showupload');
 const showexpiredaysName = getPluginOptionName(pluginName, 'showexpiredays');
+const audioallowed = getPluginOptionName(pluginName, 'audioallowed');
+const videoallowed = getPluginOptionName(pluginName, 'videoallowed');
+const screenallowed = getPluginOptionName(pluginName, 'screenallowed');
+const widgetsallowed = getPluginOptionName(pluginName, 'widgetsallowed');
 
 /**
  * Options registration function.
@@ -107,6 +111,18 @@ export const register = (editor) => {
     });
     registerOption(showexpiredaysName, {
         processor: 'int',
+    });
+    registerOption(audioallowed, {
+        processor: 'boolean',
+    });
+    registerOption(videoallowed, {
+        processor: 'boolean',
+    });
+    registerOption(screenallowed, {
+        processor: 'boolean',
+    });
+    registerOption(widgetsallowed, {
+        processor: 'boolean',
     });
 };
 
@@ -253,3 +269,35 @@ export const getShowupload = (editor) => editor.options.get(showuploadName);
  * @returns {object} The value of the showexpiredays option
  */
 export const getShowexpiredays = (editor) => editor.options.get(showexpiredaysName);
+
+/**
+ * Fetch the audioallowed value for this editor instance.
+ *
+ * @param {tinyMCE} editor The editor instance to fetch the value for
+ * @returns {object} The value of the audioallowed option
+ */
+export const getAudioallowed = (editor) => editor.options.get(audioallowed);
+
+/**
+ * Fetch the videoallowed value for this editor instance.
+ *
+ * @param {tinyMCE} editor The editor instance to fetch the value for
+ * @returns {object} The value of the videoallowed option
+ */
+export const getVideoallowed = (editor) => editor.options.get(videoallowed);
+
+/**
+ * Fetch the screenallowed value for this editor instance.
+ *
+ * @param {tinyMCE} editor The editor instance to fetch the value for
+ * @returns {object} The value of the screenallowed option
+ */
+export const getScreenallowed = (editor) => editor.options.get(screenallowed);
+
+/**
+ * Fetch the widgetsallowed value for this editor instance.
+ *
+ * @param {tinyMCE} editor The editor instance to fetch the value for
+ * @returns {object} The value of the widgetsallowed option
+ */
+export const getWidgetsallowed = (editor) => editor.options.get(widgetsallowed);

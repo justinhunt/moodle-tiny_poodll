@@ -35,6 +35,13 @@ import {
     widgetsMenuItemName,
     icon,
 } from './common';
+import {
+    audioallowed,
+    videoallowed,
+    screenallowed,
+    widgetsallowed
+} from './options';
+import rec_audio from './rec_audio';
 
 /**
  * Handle the action for your plugin.
@@ -63,7 +70,10 @@ export const getSetup = async() => {
         recvideoMenuItemNameTitle,
         recscreenMenuItemNameTitle,
         widgetsMenuItemNameTitle,
-        buttonImage,
+        audioIcon,
+        videoIcon,
+        screenIcon,
+        widgetsIcon,
     ] = await Promise.all([
         getString('button_recaudio', component),
         getString('button_recvideo', component),
@@ -73,68 +83,84 @@ export const getSetup = async() => {
         getString('menuitem_recvideo', component),
         getString('menuitem_recscreen', component),
         getString('menuitem_widgets', component),
-        getButtonImage('icon', component),
+        getButtonImage('audio', component),
+        getButtonImage('video', component),
+        getButtonImage('screen', component),
+        getButtonImage('widgets', component),
     ]);
 
     return (editor) => {
         // Register the Moodle SVG as an icon suitable for use as a TinyMCE toolbar button.
-        editor.ui.registry.addIcon(icon, buttonImage.html);
+        editor.ui.registry.addIcon(audioicon, audioIcon.html);
+        editor.ui.registry.addIcon(videoicon, audioIcon.html);
+        editor.ui.registry.addIcon(screenicon, screenIcon.html);
+        editor.ui.registry.addIcon(widgetsicon, widgetsIcon.html);
 
         // Register the recaudio Toolbar Button.
-        editor.ui.registry.addButton(recaudioButtonName, {
-            icon,
-            tooltip: recaudioButtonNameTitle,
-            onAction: () => handleAction(editor),
-        });
+        if(audioAllowed) {
+            editor.ui.registry.addButton(recaudioButtonName, {
+                audioicon,
+                tooltip: recaudioButtonNameTitle,
+                onAction: () => rec_audio.display(editor),
+            });
+
+            // Add the recaudio Menu Item.
+            // This allows it to be added to a standard menu, or a context menu.
+            editor.ui.registry.addMenuItem(recaudioMenuItemName, {
+                audioicon,
+                text: recaudioMenuItemNameTitle,
+                onAction: () => handleAction(editor),
+            });
+
+        }
         // Register the recvideo Toolbar Button.
-        editor.ui.registry.addButton(recvideoButtonName, {
-            icon,
-            tooltip: recvideoButtonNameTitle,
-            onAction: () => handleAction(editor),
-        });
+        if(videoAllowed) {
+            editor.ui.registry.addButton(recvideoButtonName, {
+                videoicon,
+                tooltip: recvideoButtonNameTitle,
+                onAction: () => handleAction(editor),
+            });
+
+            // Add the recvideo Menu Item.
+            // This allows it to be added to a standard menu, or a context menu.
+            editor.ui.registry.addMenuItem(recvideoMenuItemName, {
+                videoicon,
+                text: recvideoMenuItemNameTitle,
+                onAction: () => handleAction(editor),
+            });
+        }
         // Register the recscreen Toolbar Button.
-        editor.ui.registry.addButton(recscreenButtonName, {
-            icon,
-            tooltip: recscreenButtonNameTitle,
-            onAction: () => handleAction(editor),
-        });
+        if(screenAllowed) {
+            editor.ui.registry.addButton(recscreenButtonName, {
+                screenicon,
+                tooltip: recscreenButtonNameTitle,
+                onAction: () => handleAction(editor),
+            });
+
+            // Add the recscreen Menu Item.
+            // This allows it to be added to a standard menu, or a context menu.
+            editor.ui.registry.addMenuItem(recscreenMenuItemName, {
+                screenicon,
+                text: recscreenMenuItemNameTitle,
+                onAction: () => handleAction(editor),
+            });
+        }
         // Register the widgets Toolbar Button.
-        editor.ui.registry.addButton(widgetsButtonName, {
-            icon,
-            tooltip: widgetsButtonNameTitle,
-            onAction: () => handleAction(editor),
-        });
+        if(widgetsAllowed) {
+            editor.ui.registry.addButton(widgetsButtonName, {
+                widgetsicon,
+                tooltip: widgetsButtonNameTitle,
+                onAction: () => handleAction(editor),
+            });
 
-        // Add the recaudio Menu Item.
-        // This allows it to be added to a standard menu, or a context menu.
-        editor.ui.registry.addMenuItem(recaudioMenuItemName, {
-            icon,
-            text: recaudioMenuItemNameTitle,
-            onAction: () => handleAction(editor),
-        });
+            // Add the widgets Menu Item.
+            // This allows it to be added to a standard menu, or a context menu.
+            editor.ui.registry.addMenuItem(widgetsMenuItemName, {
+                widgetsicon,
+                text: widgetsMenuItemNameTitle,
+                onAction: () => handleAction(editor),
+            });
 
-        // Add the recvideo Menu Item.
-        // This allows it to be added to a standard menu, or a context menu.
-        editor.ui.registry.addMenuItem(recvideoMenuItemName, {
-            icon,
-            text: recvideoMenuItemNameTitle,
-            onAction: () => handleAction(editor),
-        });
-
-        // Add the recscreen Menu Item.
-        // This allows it to be added to a standard menu, or a context menu.
-        editor.ui.registry.addMenuItem(recscreenMenuItemName, {
-            icon,
-            text: recscreenMenuItemNameTitle,
-            onAction: () => handleAction(editor),
-        });
-
-        // Add the widgets Menu Item.
-        // This allows it to be added to a standard menu, or a context menu.
-        editor.ui.registry.addMenuItem(widgetsMenuItemName, {
-            icon,
-            text: widgetsMenuItemNameTitle,
-            onAction: () => handleAction(editor),
-        });
+        }
     };
 };
