@@ -23,7 +23,7 @@
 
 import {get_string as getString, get_strings as getStrings} from 'core/str';
 import Pending from 'core/pending';
-import {getData} from './options';
+import {getCloudpoodll} from './options';
 import uploadFile from 'editor_tiny/uploader';
 import {add as addToast} from 'core/toast';
 import * as ModalEvents from 'core/modal_events';
@@ -31,13 +31,15 @@ import * as ModalFactory from 'core/modal_factory';
 import * as Templates from 'core/templates';
 import {saveCancelPromise} from 'core/notification';
 import {prefetchStrings, prefetchTemplates} from 'core/prefetch';
-import Modal from "../../../recordrtc/amd/src/modal";
+import Modal from "./modal";
+import ModalRegistry from 'core/modal_registry';
 
 import {
     component,
     INSERTMETHOD,
     LANGUAGE,
-    CSS
+    CSS,
+    SKIN
 } from './common';
 
 /**
@@ -54,27 +56,27 @@ export default class {
      */
     constructor(editor, modal, config) {
         this.ready = false;
-
+/*
         if (!this.checkAndWarnAboutBrowserCompatibility()) {
             return;
         }
-
+*/
         this.editor = editor;
         this.config = config;//getData(editor).params;
         this.modal = modal;
         this.modalRoot = modal.getRoot()[0];
-        this.startStopButton = this.modalRoot.querySelector('button[data-action="startstop"]');
-        this.uploadButton = this.modalRoot.querySelector('button[data-action="upload"]');
+   //     this.startStopButton = this.modalRoot.querySelector('button[data-action="startstop"]');
+   //     this.uploadButton = this.modalRoot.querySelector('button[data-action="upload"]');
 
         // Disable the record button untilt he stream is acquired.
-        this.setRecordButtonState(false);
+    //    this.setRecordButtonState(false);
 
-        this.player = this.configurePlayer();
+    //    this.player = this.configurePlayer();
         this.registerEventListeners();
         this.ready = true;
 
-        this.captureUserMedia();
-        this.prefetchContent();
+      //  this.captureUserMedia();
+      //  this.prefetchContent();
     }
 
     /**
@@ -90,42 +92,17 @@ export default class {
      * Register event listeners for the modal.
      */
     registerEventListeners() {
+        /*
         this.modalRoot.addEventListener('click', this.handleModalClick.bind(this));
         this.modal.getRoot().on(ModalEvents.outsideClick, this.outsideClickHandler.bind(this));
         this.modal.getRoot().on(ModalEvents.hidden, () => {
             this.cleanupStream();
             this.requestRecordingStop();
         });
+
+         */
     }
 
-    fetchRecorderDimensions() {
-        // Get return object
-        var sizes = {};
-
-        //get video sizes]
-        switch (CLOUDPOODLL.videoskin) {
-            case SKIN.ONETWOTHREE:
-            case SKIN.SCREEN:
-                sizes.videowidth = 441; //(because the @media CSS is for <=440)
-                sizes.videoheight = 540;
-                break;
-            case SKIN.BMR:
-                sizes.videowidth = 441; //(because the @media CSS is for <=440)
-                sizes.videoheight = 500;
-                break;
-            default:
-                sizes.videowidth = 441;
-                sizes.videoheight = 450;
-
-        }
-        switch (CLOUDPOODLL.audioskin) {
-            default:
-                sizes.audiowidth = 450;
-                sizes.audioheight = 350;
-                break;
-        }
-        return sizes;
-    }
 
     /**
      * Display the widgets dialog
@@ -711,6 +688,35 @@ export default class {
         this._insertIntoEditor(template, context);
     } //end of doinsert
 
+    static fetchRecorderDimensions(config) {
+
+        // Get return object
+        var sizes = {};
+
+        //get video sizes]
+        switch (config.videoskin) {
+            case SKIN.ONETWOTHREE:
+            case SKIN.SCREEN:
+                sizes.videowidth = 441; //(because the @media CSS is for <=440)
+                sizes.videoheight = 540;
+                break;
+            case SKIN.BMR:
+                sizes.videowidth = 441; //(because the @media CSS is for <=440)
+                sizes.videoheight = 500;
+                break;
+            default:
+                sizes.videowidth = 441;
+                sizes.videoheight = 450;
+
+        }
+        switch (config.audioskin) {
+            default:
+                sizes.audiowidth = 450;
+                sizes.audioheight = 350;
+                break;
+        }
+        return sizes;
+    }
 
     static getModalClass() {
         const modalType = `${component}/rec_audio`;
@@ -721,7 +727,7 @@ export default class {
 
         const AudioModal = class extends Modal {
             static TYPE = modalType;
-            static TEMPLATE = `${component}/rec_audio`;
+            static TEMPLATE = `${component}/root`;
         };
 
         ModalRegistry.register(AudioModal.TYPE, AudioModal, AudioModal.TEMPLATE);
@@ -731,7 +737,7 @@ export default class {
     static getModalContext(editor) {
 
         var context = {};
-        var config = getData(editor).params;
+        var config = getCloudpoodll(editor);
         
         //stuff declared in common
         context.CSS = CSS;
@@ -769,13 +775,14 @@ export default class {
         context.CP.audioskin = config.cp_audioskin;
         context.CP.videoskin = config.cp_videoskin;
         context.CP.fallback = config.fallback;
-        context.CP.sizes = this._fetchRecorderDimensions();
+        context.CP.sizes = this.fetchRecorderDimensions(config);
         return context;
     }
 
     static async display(editor) {
         const ModalClass = this.getModalClass();
         const templatecontext = this.getModalContext(editor);
+        templatecontext.isaudio=true;
         const modal = await ModalFactory.create({
             type: ModalClass.TYPE,
             templateContext: templatecontext,
@@ -784,9 +791,10 @@ export default class {
 
         // Set up the Recorder.
         const recorder = new this(editor, modal, templatecontext);
-        if (recorder.isReady()) {
+        recorder.loadRecorders();
+       // if (recorder.isReady()) {
             modal.show();
-        }
+        //}
         return modal;
     }
 

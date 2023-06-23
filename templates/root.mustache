@@ -1,5 +1,8 @@
+{{< core/modal }}
+{{$title}}The recorder man{{/title}}
+    {{$body}}
 <form class="tiny_poodll_form" id="{{elementid}}_tiny_poodll_form">
-    {{> tiny_cloudpoodll/menu}}
+    {{> tiny_poodll/menu}}
     <div class="root tab-content">
       {{#isvideo}}{{> tiny_poodll/videopanel}}{{/isvideo}}
       {{#isaudio}}{{> tiny_poodll/audiopanel}}{{/isaudio}}
@@ -9,3 +12,8 @@
       {{#showhistory}}{{> tiny_poodll/historypanel}}{{/showhistory}}
     </div>
 </form>
+    {{/body}}
+    {{$footer}}
+        <button type="button" class="btn btn-secondary" data-action="cancel">{{#str}} cancel {{/str}}</button>
+    {{/footer}}
+{{/ core/modal }}

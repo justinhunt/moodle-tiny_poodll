@@ -92,7 +92,7 @@ export default {
         EXPIREDAYS_SELECT: `${component}_expiredaysselect`,
         SUBTITLE_CHECKBOX: `${component}_subtitle_checkbox`,
         MEDIAINSERT_CHECKBOX: `${component}_mediainsert_checkbox`,
-        ${component}_FORM: `${component}_form`,
+        BLAHBLAH_FORM: `${component}_form`,
         CP_VIDEO: `${component}_video_cont`,
         CP_SCREEN: `${component}_screen_cont`,
         CP_AUDIO: `${component}_audio_cont`,

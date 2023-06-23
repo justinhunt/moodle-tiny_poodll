@@ -32,15 +32,9 @@ import {
     recaudioMenuItemName,
     recvideoMenuItemName,
     recscreenMenuItemName,
-    widgetsMenuItemName,
-    icon,
+    widgetsMenuItemName
 } from './common';
-import {
-    audioallowed,
-    videoallowed,
-    screenallowed,
-    widgetsallowed
-} from './options';
+import {isAllowed} from './options';
 import rec_audio from './rec_audio';
 
 /**
@@ -91,15 +85,15 @@ export const getSetup = async() => {
 
     return (editor) => {
         // Register the Moodle SVG as an icon suitable for use as a TinyMCE toolbar button.
-        editor.ui.registry.addIcon(audioicon, audioIcon.html);
-        editor.ui.registry.addIcon(videoicon, audioIcon.html);
-        editor.ui.registry.addIcon(screenicon, screenIcon.html);
-        editor.ui.registry.addIcon(widgetsicon, widgetsIcon.html);
+        editor.ui.registry.addIcon('audioicon', audioIcon.html);
+        editor.ui.registry.addIcon('videoicon', videoIcon.html);
+        editor.ui.registry.addIcon('screenicon', screenIcon.html);
+        editor.ui.registry.addIcon('widgetsicon', widgetsIcon.html);
 
         // Register the recaudio Toolbar Button.
-        if(audioAllowed) {
+        if(isAllowed(editor,'audio')) {
             editor.ui.registry.addButton(recaudioButtonName, {
-                audioicon,
+                icon: 'audioicon',
                 tooltip: recaudioButtonNameTitle,
                 onAction: () => rec_audio.display(editor),
             });
@@ -107,16 +101,16 @@ export const getSetup = async() => {
             // Add the recaudio Menu Item.
             // This allows it to be added to a standard menu, or a context menu.
             editor.ui.registry.addMenuItem(recaudioMenuItemName, {
-                audioicon,
+                icon:  'audioicon',
                 text: recaudioMenuItemNameTitle,
                 onAction: () => handleAction(editor),
             });
 
         }
         // Register the recvideo Toolbar Button.
-        if(videoAllowed) {
+        if(isAllowed(editor,'video')) {
             editor.ui.registry.addButton(recvideoButtonName, {
-                videoicon,
+                icon: 'videoicon',
                 tooltip: recvideoButtonNameTitle,
                 onAction: () => handleAction(editor),
             });
@@ -124,15 +118,15 @@ export const getSetup = async() => {
             // Add the recvideo Menu Item.
             // This allows it to be added to a standard menu, or a context menu.
             editor.ui.registry.addMenuItem(recvideoMenuItemName, {
-                videoicon,
+                icon: 'videoicon',
                 text: recvideoMenuItemNameTitle,
                 onAction: () => handleAction(editor),
             });
         }
         // Register the recscreen Toolbar Button.
-        if(screenAllowed) {
+        if(isAllowed(editor,'screen')) {
             editor.ui.registry.addButton(recscreenButtonName, {
-                screenicon,
+                icon: 'screenicon',
                 tooltip: recscreenButtonNameTitle,
                 onAction: () => handleAction(editor),
             });
@@ -140,15 +134,15 @@ export const getSetup = async() => {
             // Add the recscreen Menu Item.
             // This allows it to be added to a standard menu, or a context menu.
             editor.ui.registry.addMenuItem(recscreenMenuItemName, {
-                screenicon,
+                icon: 'screenicon',
                 text: recscreenMenuItemNameTitle,
                 onAction: () => handleAction(editor),
             });
         }
         // Register the widgets Toolbar Button.
-        if(widgetsAllowed) {
+        if(isAllowed(editor,'widgets')) {
             editor.ui.registry.addButton(widgetsButtonName, {
-                widgetsicon,
+                icon: 'widgetsicon',
                 tooltip: widgetsButtonNameTitle,
                 onAction: () => handleAction(editor),
             });
@@ -156,7 +150,7 @@ export const getSetup = async() => {
             // Add the widgets Menu Item.
             // This allows it to be added to a standard menu, or a context menu.
             editor.ui.registry.addMenuItem(widgetsMenuItemName, {
-                widgetsicon,
+                icon: 'widgetsicon',
                 text: widgetsMenuItemNameTitle,
                 onAction: () => handleAction(editor),
             });

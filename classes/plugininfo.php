@@ -83,8 +83,7 @@ class plugininfo extends plugin implements plugin_with_configuration, plugin_wit
 
         $config = get_config(constants::M_COMPONENT);
 
-        //coursecontext
-        $context = $options['context'];
+
         if (!$context) {
             $context = \context_course::instance($COURSE->id);
         }
@@ -113,36 +112,38 @@ class plugininfo extends plugin implements plugin_with_configuration, plugin_wit
         $canoptions = $config->showoptions && has_capability('tiny/poodll:allowoptions', $context);
 
         //cloudpoodll params
-        $params['cp_expiredays'] = $config->expiredays;
-        $params['cp_cansubtitle'] = $cansubtitle;
-        $params['cp_token'] = utils::fetch_token($config->apiuser, $config->apisecret);
-        $params['cp_region'] = $config->awsregion;
-        $params['cp_language'] = $config->language;
-        $params['cp_expiredays'] = $config->expiredays;
-        $params['cp_transcode'] = $config->transcode;
-        $params['cp_audioskin'] = $config->audioskin;
-        $params['cp_videoskin'] = $config->videoskin;
-        $params['cp_fallback'] = $config->fallback;
-        $params['cp_owner'] = hash('md5',$USER->username);
+        $cloudpoodll =[];
+        $cloudpoodll['cp_expiredays'] = $config->expiredays;
+        $cloudpoodll['cp_cansubtitle'] = $cansubtitle;
+        $cloudpoodll['cp_token'] = utils::fetch_token($config->apiuser, $config->apisecret);
+        $cloudpoodll['cp_region'] = $config->awsregion;
+        $cloudpoodll['cp_language'] = $config->language;
+        $cloudpoodll['cp_expiredays'] = $config->expiredays;
+        $cloudpoodll['cp_transcode'] = $config->transcode;
+        $cloudpoodll['cp_audioskin'] = $config->audioskin;
+        $cloudpoodll['cp_videoskin'] = $config->videoskin;
+        $cloudpoodll['cp_fallback'] = $config->fallback;
+        $cloudpoodll['cp_owner'] = hash('md5',$USER->username);
 
         //insert method
-        $params['insertmethod'] = $config->insertmethod;
-        $params['subtitleaudiobydefault'] = $config->subtitleaudiobydefault;
-        $params['subtitlevideobydefault'] = $config->subtitlevideobydefault;
+        $cloudpoodll['insertmethod'] = $config->insertmethod;
+        $cloudpoodll['subtitleaudiobydefault'] = $config->subtitleaudiobydefault;
+        $cloudpoodll['subtitlevideobydefault'] = $config->subtitlevideobydefault;
 
         //add our disabled param
-        $params['disabled'] = $disabled;
+        $cloudpoodll['disabled'] = $disabled;
 
-        $params['filetitle_displaylength'] = constants::FILETITLE_DISPLAYLENGTH;
+        $cloudpoodll['filetitle_displaylength'] = constants::FILETITLE_DISPLAYLENGTH;
 
         //showhistory or not
-        $params['showhistory'] =  $canhistory;
+        $cloudpoodll['showhistory'] =  $canhistory;
         //showoptions or not
-        $params['showoptions'] =  $canoptions;
+        $cloudpoodll['showoptions'] =  $canoptions;
         //showupload or not
-        $params['showupload'] =  $canupload;
+        $cloudpoodll['showupload'] =  $canupload;
         //expire days
-        $params['showexpiredays'] =  $canexpiredays;
+        $cloudpoodll['showexpiredays'] =  $canexpiredays;
+        $params['cloudpoodll'] = $cloudpoodll;
 
         //add icons to editor if the permissions and settings are all ok
         $recorders = array('audio', 'video','screen','widgets');
@@ -171,6 +172,6 @@ class plugininfo extends plugin implements plugin_with_configuration, plugin_wit
                 $params[$recorder .'allowed'] = false;
             }
         }
-        return $params;
+        return  $params;
     }
 }
