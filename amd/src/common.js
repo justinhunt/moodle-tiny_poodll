@@ -141,17 +141,17 @@ export default {
         '<h4 class="' + CSS.HEADERTEXT + '">{{headertext}}</h4>' +
         '</div>',
 
-    BUTTONTEMPLATE : '<div id="{{elementid}}_{{innerform}}" class="atto_widget_buttons mdl-align" style="width:30%;">' +
+    BUTTONTEMPLATE : '<div id="{{elementid}}_{{innerform}}" class="tiny_poodll_widget_buttons mdl-align" style="width:30%;">' +
         '<button style="width: 100%;" class="' + CSS.NAMEBUTTON + '_{{templateindex}} btn btn-info d-block">{{name}}</button>' +
         '</div>',
 
     FIELDTEMPLATE: '<div id="{{elementid}}_{{innerform}}"><span class="atto_cloudpoodll_widgetlabel">{{label}}</span>' +
-        '&nbsp;<input type="text" class="' + CSS.TEMPLATEVARIABLE + '_{{variableindex}} atto_widget_field" value="{{defaultvalue}}"></input>' +
+        '&nbsp;<input type="text" class="' + CSS.TEMPLATEVARIABLE + '_{{variableindex}} tiny_poodll_widget_field" value="{{defaultvalue}}"></input>' +
         '</div>',
 
     SELECTCONTAINERTEMPLATE: '<div id="{{elementid}}_{{innerform}}"><span class="atto_cloudpoodll_widgetlabel">{{label}}</span></div>',
 
-    SELECTTEMPLATE: '<select class="' + CSS.TEMPLATEVARIABLE + '_{{variableindex}} atto_widget_field"></select>',
+    SELECTTEMPLATE: '<select class="' + CSS.TEMPLATEVARIABLE + '_{{variableindex}} tiny_poodll_widget_field"></select>',
 
     OPTIONTEMPLATE: '<option value="{{option}}">{{option}}</option>',
 

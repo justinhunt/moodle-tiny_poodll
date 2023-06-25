@@ -92,6 +92,83 @@ export default class {
      * Register event listeners for the modal.
      */
     registerEventListeners() {
+        var that =this;
+        const $root = this.modal.getRoot();
+        const root = $root[0];
+        //get a handle on the controls we need to work with
+        var controls={};
+        const recorders = root.querySelectorAll('.' + CSS.CP_SWAP);
+
+        /*
+        $root.on(ModalEvents.save, (event, modal) => {
+            handleDialogueSubmission(editor, modal, data);
+        });
+        */
+
+        root.addEventListener('click', (e) => {
+            const cbox = e.target.closest('[type="checkbox"]');
+            if (cbox) {
+                switch (cbox.id) {
+                    case CSS.SUBTITLE_CHECKBOX:
+                        //update recorder subtitle setting
+                        if (cbox.get('checked')) {
+                            recorders.forEach((recorder) => {
+                                recorder.setAttribute('data-transcribe', '1');
+                                recorder.setAttribute('data-subtitle', '1');
+                                recorder.setAttribute('data-alreadyparsed', 'false');
+                                recorder.innerHTML = "";
+                            });
+                            controls.subtitling = true;
+                        } else {
+                            recorders.forEach((recorder) => {
+                                recorder.setAttribute('data-transcribe', '0');
+                                recorder.setAttribute('data-subtitle', '0');
+                                recorder.setAttribute('data-alreadyparsed', 'false');
+                                recorder.innerHTML = "";
+                            });
+                            controls.subtitling = false;
+                        }
+                        //reload the recorders
+                        that.loadRecorders();
+                        break;
+                    case CSS.MEDIAINSERT_CHECKBOX:
+                        //update recorder subtitle setting
+                        if (cbox.get('checked')) {
+                            controls.insertmethod = INSERTMETHOD.TAGS;
+                        } else {
+                            controls.insertmethod = INSERTMETHOD.LINK;
+                        }
+                        break;
+                }
+            }
+        });
+        root.addEventListener('change', (e) => {
+            const dropdown = e.target.closest('select');
+            if(dropdown){
+                switch(dropdown.id){
+                    case CSS.LANG_SELECT:
+                        CLOUDPOODLL.language =dropdown.get('value');
+                        recorders.forEach((recorder) => {
+                            recorder.setAttribute('data-language', CLOUDPOODLL.language);
+                            recorder.setAttribute('data-alreadyparsed', 'false');
+                            recorder.innerHTML="";
+                        });
+                        that.loadRecorders();
+                        break;
+                    case CSS.EXPIREDAYS_SELECT:
+                        //do something
+                        recorders.forEach((recorder) => {
+                            recorder.setAttribute('data-expiredays', CLOUDPOODLL.expiredays);
+                            recorder.setAttribute('data-alreadyparsed', 'false');
+                            recorder.innerHTML="";
+                        });
+                        that.loadRecorders();
+                }
+
+            }
+
+        });
+
         /*
         this.modalRoot.addEventListener('click', this.handleModalClick.bind(this));
         this.modal.getRoot().on(ModalEvents.outsideClick, this.outsideClickHandler.bind(this));
@@ -782,7 +859,11 @@ export default class {
     static async display(editor) {
         const ModalClass = this.getModalClass();
         const templatecontext = this.getModalContext(editor);
+
+        //TO DO set these settigns according to the toolbar button which was clicked
         templatecontext.isaudio=true;
+        templatecontext.recorder = 'audio'; //(audio or video)
+
         const modal = await ModalFactory.create({
             type: ModalClass.TYPE,
             templateContext: templatecontext,
