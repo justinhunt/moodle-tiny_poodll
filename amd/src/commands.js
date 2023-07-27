@@ -35,7 +35,9 @@ import {
     widgetsMenuItemName
 } from './common';
 import {isAllowed} from './options';
-import rec_audio from './rec_audio';
+import audio_recorder from './audio_recorder';
+import video_recorder from './video_recorder';
+import screen_recorder from './screen_recorder';
 
 /**
  * Handle the action for your plugin.
@@ -95,7 +97,7 @@ export const getSetup = async() => {
             editor.ui.registry.addButton(recaudioButtonName, {
                 icon: 'audioicon',
                 tooltip: recaudioButtonNameTitle,
-                onAction: () => rec_audio.display(editor),
+                onAction: () => audio_recorder.display(editor),
             });
 
             // Add the recaudio Menu Item.
@@ -112,7 +114,7 @@ export const getSetup = async() => {
             editor.ui.registry.addButton(recvideoButtonName, {
                 icon: 'videoicon',
                 tooltip: recvideoButtonNameTitle,
-                onAction: () => handleAction(editor),
+                onAction: () => video_recorder.display(editor),
             });
 
             // Add the recvideo Menu Item.
@@ -120,7 +122,7 @@ export const getSetup = async() => {
             editor.ui.registry.addMenuItem(recvideoMenuItemName, {
                 icon: 'videoicon',
                 text: recvideoMenuItemNameTitle,
-                onAction: () => handleAction(editor),
+                onAction: () => video_recorder.display(editor),
             });
         }
         // Register the recscreen Toolbar Button.
@@ -128,7 +130,7 @@ export const getSetup = async() => {
             editor.ui.registry.addButton(recscreenButtonName, {
                 icon: 'screenicon',
                 tooltip: recscreenButtonNameTitle,
-                onAction: () => handleAction(editor),
+                onAction: () => screen_recorder.display(editor),
             });
 
             // Add the recscreen Menu Item.
@@ -136,7 +138,7 @@ export const getSetup = async() => {
             editor.ui.registry.addMenuItem(recscreenMenuItemName, {
                 icon: 'screenicon',
                 text: recscreenMenuItemNameTitle,
-                onAction: () => handleAction(editor),
+                onAction: () => screen_recorder.display(editor),
             });
         }
         // Register the widgets Toolbar Button.

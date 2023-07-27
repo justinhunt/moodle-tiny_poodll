@@ -23,6 +23,7 @@
 
 import {get_string as getString, get_strings as getStrings} from 'core/str';
 import Pending from 'core/pending';
+import Log from 'core/log';
 import {getCloudpoodll} from './options';
 import uploadFile from 'editor_tiny/uploader';
 import {add as addToast} from 'core/toast';
@@ -33,6 +34,8 @@ import {saveCancelPromise} from 'core/notification';
 import {prefetchStrings, prefetchTemplates} from 'core/prefetch';
 import Modal from "./modal";
 import ModalRegistry from 'core/modal_registry';
+import History from 'tiny_poodll/history';
+import * as Notification from 'core/notification';
 
 import {
     component,
@@ -51,10 +54,11 @@ export default class {
      * Constructor for the Tiny Poodll Recorder
      *
      * @param {TinyMCE} editor The Editor to which the content will be inserted
+     * @param {elementid} elementid
      * @param {Modal} modal The Moodle Modal that contains the interface used for recording
      * @param {config} config The data passed to template and used internally for managing plugin state
      */
-    constructor(editor, modal, config) {
+    constructor(editor,elementid, modal, config) {
         this.ready = false;
 /*
         if (!this.checkAndWarnAboutBrowserCompatibility()) {
@@ -62,21 +66,21 @@ export default class {
         }
 */
         this.editor = editor;
+        this.elementid = elementid;
         this.config = config;//getData(editor).params;
         this.modal = modal;
         this.modalRoot = modal.getRoot()[0];
-   //     this.startStopButton = this.modalRoot.querySelector('button[data-action="startstop"]');
-   //     this.uploadButton = this.modalRoot.querySelector('button[data-action="upload"]');
-
-        // Disable the record button untilt he stream is acquired.
-    //    this.setRecordButtonState(false);
-
-    //    this.player = this.configurePlayer();
-        this.registerEventListeners();
+        this.registerEvents();
         this.ready = true;
+    }
 
-      //  this.captureUserMedia();
-      //  this.prefetchContent();
+    /**
+     * Get the name of the template used when embedding the URL in the editor content.
+     *
+     * @returns {string}
+     */
+    fetchMediaTags() {
+        throw new Error(`fetchMediaTags() must be implemented in ${this.constructor.name}`);
     }
 
     /**
@@ -88,15 +92,17 @@ export default class {
         this.modal.hide();
     }
 
+    getElement(component){
+        return this.modalRoot.querySelector('#' + this.elementid + '_' + component);
+    }
+
     /**
      * Register event listeners for the modal.
      */
-    registerEventListeners() {
+    registerEvents() {
         var that =this;
         const $root = this.modal.getRoot();
         const root = $root[0];
-        //get a handle on the controls we need to work with
-        var controls={};
         const recorders = root.querySelectorAll('.' + CSS.CP_SWAP);
 
         /*
@@ -107,18 +113,19 @@ export default class {
 
         root.addEventListener('click', (e) => {
             const cbox = e.target.closest('[type="checkbox"]');
-            if (cbox) {
-                switch (cbox.id) {
-                    case CSS.SUBTITLE_CHECKBOX:
+           // if (cbox) {
+            Log.debug(e.target.id);
+                switch (e.target.id) {
+                    case that.elementid + '_' + CSS.SUBTITLE_CHECKBOX:
                         //update recorder subtitle setting
-                        if (cbox.get('checked')) {
+                        if (cbox.checked) {
                             recorders.forEach((recorder) => {
                                 recorder.setAttribute('data-transcribe', '1');
                                 recorder.setAttribute('data-subtitle', '1');
                                 recorder.setAttribute('data-alreadyparsed', 'false');
                                 recorder.innerHTML = "";
                             });
-                            controls.subtitling = true;
+                            that.config.subtitling = true;
                         } else {
                             recorders.forEach((recorder) => {
                                 recorder.setAttribute('data-transcribe', '0');
@@ -126,39 +133,40 @@ export default class {
                                 recorder.setAttribute('data-alreadyparsed', 'false');
                                 recorder.innerHTML = "";
                             });
-                            controls.subtitling = false;
+                            that.config.subtitling = false;
                         }
                         //reload the recorders
                         that.loadRecorders();
                         break;
-                    case CSS.MEDIAINSERT_CHECKBOX:
+                    case  that.elementid + '_' + CSS.MEDIAINSERT_CHECKBOX:
                         //update recorder subtitle setting
-                        if (cbox.get('checked')) {
-                            controls.insertmethod = INSERTMETHOD.TAGS;
+                        if (cbox.checked) {
+                            that.config.insertmethod = INSERTMETHOD.TAGS;
                         } else {
-                            controls.insertmethod = INSERTMETHOD.LINK;
+                            that.config.insertmethod = INSERTMETHOD.LINK;
                         }
                         break;
                 }
-            }
+           // }
         });
         root.addEventListener('change', (e) => {
-            const dropdown = e.target.closest('select');
+            const dropdown = e.target;
             if(dropdown){
                 switch(dropdown.id){
-                    case CSS.LANG_SELECT:
+                    case that.elementid + '_' + CSS.LANG_SELECT:
+                        //TO DO - save this value, or leave it as is ... do we need to keep track of it, for insert method?
                         CLOUDPOODLL.language =dropdown.get('value');
                         recorders.forEach((recorder) => {
-                            recorder.setAttribute('data-language', CLOUDPOODLL.language);
+                            recorder.setAttribute('data-language', that.config.CP.language);
                             recorder.setAttribute('data-alreadyparsed', 'false');
                             recorder.innerHTML="";
                         });
                         that.loadRecorders();
                         break;
-                    case CSS.EXPIREDAYS_SELECT:
+                    case that.elementid + '_' + CSS.EXPIREDAYS_SELECT:
                         //do something
                         recorders.forEach((recorder) => {
-                            recorder.setAttribute('data-expiredays', CLOUDPOODLL.expiredays);
+                            recorder.setAttribute('data-expiredays', that.config.CP.expiredays);
                             recorder.setAttribute('data-alreadyparsed', 'false');
                             recorder.innerHTML="";
                         });
@@ -227,28 +235,11 @@ export default class {
         this.markUpdated();
     }
 
-    getButtonsForNames(clickedicon) {
-        var allcontent = [];
-        Y.Array.each(CLOUDPOODLL.names, function (thename, currentindex) {
-            //loop start
-            var template = Y.Handlebars.compile(BUTTONTEMPLATE),
-                content = Y.Node.create(template({
-                    elementid: this.get('host').get('elementid'),
-                    name: thename,
-                    templateindex: currentindex
-                }));
-            this._form = content;
-            content.one('.' + CSS.NAMEBUTTON + '_' + currentindex).on('click', this._showTemplateForm, this, currentindex);
-            allcontent.push(content);
-            //loop end
-        }, this);
 
-        return allcontent;
-    }
 
     /**
      * Return the widget dialogue content for the tool, attaching any required
-     * events.
+     * events. OLD
      *
      * @method _getSubmitButtons
      * @return {Node} The content to place in the dialogue.
@@ -268,7 +259,7 @@ export default class {
     }
 
     /**
-     * Display the cloud poodll tool.
+     * Display the cloud poodll tool. OLD
      *
      * @method _displayDialogue
      * @private
@@ -473,78 +464,13 @@ export default class {
     }
 
     /**
-     * Loads the history tab html.
+     * Initialises history tab and events
      *
-     * @method loadHistory
+     * @method initHistory
+     * @private
      */
-    loadHistory() {
-        require(['core/templates','core/ajax', 'core/notification'], function (templates,ajax, notification) {
-            ajax.call([{
-                methodname: 'atto_cloudpoodll_history_get_items',
-                args: {'recordertype' : STATE.currentrecorder},
-                done: function (historyitems) {
-                    /**
-                     * Takes a mysql unix timestamp (in seconds) and converts to a display date.
-                     *
-                     * @method _formatUnixDate
-                     * @param dateToFormat Date to format
-                     */
-                    function _formatUnixDate(dateToFormat) {
-                        var dateObj = new Date(dateToFormat * 1000);
-
-                        var month = dateObj.getUTCMonth() + 1;
-                        var day = dateObj.getUTCDate();
-                        var year = dateObj.getUTCFullYear();
-
-                        return month + "/" + day + "/" + year;
-                    }
-
-                    if (Array.isArray(historyitems.responses)) {
-                        historyitems.responses.forEach(function(item){
-                            item.displaydateofentry = _formatUnixDate(item.dateofentry);
-                            item.displayfiletitle = item.filetitle.substring(0, STATE.filetitledisplaylength) + '...';
-                        });
-                        historyitems.responses.formatted = JSON.stringify(historyitems.responses);
-                    }
-
-                    var context = {data: historyitems.responses};
-
-                    templates.render('atto_cloudpoodll/historypanel', context)
-                        .then(function (html, js) {
-                            templates.replaceNodeContents('div[data-field="history"]', html, js);
-                        }).fail(function (ex) {
-                        notification.exception(ex);
-                    });
-                }
-            }]);
-        });
-    }
-
-    /**
-     * Loads the history video preview tab html.
-     *
-     * @method loadHistoryPreview
-     * @param historyItem History item ID from list.
-     */
-    loadHistoryPreview(historyItem) {
-        require(['core/templates', 'core/ajax', 'core/notification'], function (templates, ajax, notification) {
-            ajax.call([{
-                methodname: 'atto_cloudpoodll_history_get_item',
-                args: {'id': historyItem.dataset.historyId},
-                done: function (historyItemData) {
-                    var context = {
-                        data: historyItemData.responses,
-                        isVideo: STATE.currentrecorder === RECORDERS.VIDEO || STATE.currentrecorder === RECORDERS.SCREEN
-                    };
-                    templates.render('atto_cloudpoodll/historypreview', context)
-                        .then(function (html, js) {
-                            templates.replaceNodeContents('div[data-field="history"]', html, js);
-                        }).fail(function (ex) {
-                        notification.exception(ex);
-                    });
-                }
-            }]);
-        });
+    initHistory() {
+        this.history = new History(this);
     }
 
     /**
@@ -555,7 +481,7 @@ export default class {
      */
     loadRecorders() {
         var that = this;
-
+        Log.debug('loading recorders');
         that.uploaded = false;
         that.ap_count = 0;
         require(['tiny_poodll/cloudpoodllloader'], function (loader) {
@@ -564,10 +490,10 @@ export default class {
                     case 'recording':
                         if (evt.action === 'started') {
                             //if user toggled subtitle checkbox any time from now, the recording would be lost
-                            if (STATE.subtitlecheckbox != null) {
-                                STATE.subtitlecheckbox.set('disabled', true);
+                            var subtitlecheckbox= that.getElement(CSS.SUBTITLE_CHECKBOX);
+                            if (subtitlecheckbox != null) {
+                                subtitlecheckbox.disabled = true;
                             }
-
                         }
                         break;
                     case 'awaitingprocessing':
@@ -576,10 +502,15 @@ export default class {
                         // but an incorrect ext is just confusing. most players will ignore it and deal with contents
                         if (!that.uploaded) {
                             setTimeout(function () {
-                                var guessed_ext = loader.fetch_guessed_extension(STATE.currentrecorder );
+                                var guessed_ext = loader.fetch_guessed_extension(that.recorder );
                                 var sourcefilename = evt.sourcefilename.split('.').slice(0, -1).join('.') + '.' + guessed_ext;
                                 var sourceurl = evt.s3root + sourcefilename;
-                                that._doInsert(evt.mediaurl, evt.mediafilename, sourceurl, evt.sourcemimetype);
+                                //save history
+                                Log.debug("saving history item");
+                                that.history.saveHistoryItem(evt.mediaurl,evt.mediafilename, sourceurl, evt.sourcemimetype).then(
+                                    function(){Log.debug("ajax SAVED history item");}
+                                );
+                                that.doInsert(evt.mediaurl, evt.mediafilename, sourceurl, evt.sourcemimetype);
                             }, 4000);
                             that.uploaded = true;
                         }
@@ -598,223 +529,110 @@ export default class {
         });
     }
 
-    /**
-     * Inserts the history item info the page.
-     *
-     * @method insertHistoryItem
-     * @param  historyItem object
-     * @private
-     */
-    insertHistoryItem(historyItem) {
-        poodllRecorder.getDialogue({
-            focusAfterHide: null
-        }).hide();
-
-        require(['core/ajax'], function (ajax) {
-            ajax.call([{
-                methodname: 'atto_cloudpoodll_history_get_item',
-                args: {'id': historyItem.dataset.historyId},
-                done: function (historyItemData) {
-                    //const [first] = historyItemData.responses;
-                    //var item = first;
-                    var item = historyItemData.responses[0];
-                    var mediaLink = poodllRecorder._createMediaLink(
-                        item.mediaurl,
-                        item.mediafilename,
-                        item.sourceurl,
-                        item.sourcemimetype
-                    );
-
-                    switch (STATE.insertmethod) {
-
-                        case INSERTMETHOD.TAGS:
-                            mediaLink.template = poodllRecorder._createMediaTemplate(mediaLink.context, item.sourcemimetype, mediaLink.template);
-                            break;
-
-                        case INSERTMETHOD.LINK:
-                        default:
-                        //do nothing we already made the template as a link
-                    }
-
-                    poodllRecorder._insertIntoEditor(mediaLink.template, mediaLink.context);
-                }
-            }]);
-        });
-    }
 
     /**
      * Creates the media link based on the recorder type.
      *
-     * @method _createMediaLink
+     * @method fetchMediaLink
      * @param  mediaurl media URL to the AWS object
      * @param  mediafilename File name of the AWS object
      * @param  sourceurl URL to the AWS object
      * @param  sourcemimetype MimeType of the AWS object
      * @private
      */
-    createMediaLink(mediaurl, mediafilename, sourceurl, sourcemimetype) {
+    fetchMediaLink(mediaurl, mediafilename, sourceurl, sourcemimetype) {
         var context = {};
         context.url = mediaurl;
         context.name = mediafilename;
-        context.issubtitling = STATE.subtitling && STATE.subtitling !== '0';
-        context.includesourcetrack = STATE.transcoding && (mediaurl !== sourceurl) && (sourceurl.slice(-3) !== 'wav') && (sourceurl !== false);
-        context.CP = CLOUDPOODLL;
+        context.issubtitling = this.config.subtitling && this.config.subtitling !== '0';
+        context.includesourcetrack = this.config.transcoding && (mediaurl !== sourceurl) && (sourceurl.slice(-3) !== 'wav') && (sourceurl !== false);
+        context.CP = this.config.CP;
         context.subtitleurl = mediaurl + '.vtt';
         context.sourceurl = sourceurl;
         context.sourcemimetype = sourcemimetype;
-
-        var template = TEMPLATES.HTML_MEDIA.LINK;
-
-        return {context: context, template: template};
-    }
-
-    /**
-     * Inserts the item into the editor.
-     *
-     * @method _createMediaLink
-     * @param  template HTML template to insert into the editor
-     * @param  context Context of the item being inserted
-     * @private
-     */
-    insertIntoEditor(template, context) {
-        var content =
-            Y.Handlebars.compile(template)(context);
-        this.editor.focus();
-        this.get('host').insertContentAtFocusPoint(content);
-        this.markUpdated();
-    }
-
-    /**
-     * Creates the media template for audio/video.
-     *
-     * @method _createMediaTemplate
-     * @param  context Context of the item being inserted
-     * @param  sourcemimetype MimeType of the AWS object
-     * @param  context Context of the item being inserted
-     * @private
-     */
-    createMediaTemplate(context, sourcemimetype, template) {
-        if (STATE.currentrecorder === RECORDERS.VIDEO || STATE.currentrecorder === RECORDERS.SCREEN) {
-            context.width = false;
-            context.height = false;
-            context.poster = false;
-            if (STATE.transcoding) {
-                context.urlmimetype = 'video/mp4';
-            } else {
-                context.urlmimetype = sourcemimetype;
-            }
-            template = TEMPLATES.HTML_MEDIA.VIDEO;
-        } else {
-            context.width = false;
-            context.height = false;
-            context.poster = false;
-            if (STATE.transcoding) {
-                context.urlmimetype = 'audio/mp3';
-            } else {
-                context.urlmimetype = sourcemimetype;
-            }
-            template = TEMPLATES.HTML_MEDIA.AUDIO;
-        }
-        return template;
+        return Templates.renderForPromise(
+            'tiny_poodll/medialink',
+            context
+        );
     }
 
     /**
      * Inserts the link or media element onto the page
-     * @method _doInsert
+     * @method doInsert
+     * @param  mediaurl media URL to the AWS object
+     * @param  mediafilename File name of the AWS object
+     * @param  sourceurl URL to the AWS object
+     * @param  sourcemimetype MimeType of the AWS object
      * @private
      */
     doInsert(mediaurl, mediafilename, sourceurl, sourcemimetype) {
-        this.getDialogue({
-            focusAfterHide: null
-        }).hide();
 
-        //default context values(link) for template
-        // var {context, template}
-        var medialink = this._createMediaLink(mediaurl, mediafilename, sourceurl, sourcemimetype);
-        var context = medialink.context;
-        var template = medialink.template;
-        function saveToHistory() {
-            require(['core/ajax'], function (ajax) {
-                ajax.call([{
-                    methodname: 'atto_cloudpoodll_history_create',
-                    args: {
-                        recordertype: STATE.currentrecorder,
-                        mediafilename: mediafilename,
-                        sourceurl: sourceurl,
-                        mediaurl: mediaurl,
-                        sourcemimetype: sourcemimetype,
-                        subtitling: STATE.subtitling ? 1 : 0,
-                        subtitleurl: STATE.subtitling ? mediaurl + '.vtt' : '',
-                    },
-                }]);
-            });
-        }
+        var that = this;
 
-        switch (STATE.insertmethod) {
+        //do the actual inserting
+        switch (this.config.insertmethod) {
 
             case INSERTMETHOD.TAGS:
-                template = this._createMediaTemplate(context, sourcemimetype, template);
+                this.fetchMediaTags(mediaurl, mediafilename, sourceurl, sourcemimetype).then(
+                    function(insert){
+                        Log.debug('inserting into editor');
+                        that.editor.insertContent(insert.html);
+                        that.close();
+                        //addToast(await getString('recordinguploaded', component));
+                    }
+                );
                 break;
 
             case INSERTMETHOD.LINK:
-                break;
             default:
-            //do nothing special actually.
+                this.fetchMediaLink(mediaurl, mediafilename, sourceurl, sourcemimetype).then(
+                    function(insert){
+                        Log.debug('inserting into editor');
+                        Log.debug(insert.html);
+                        that.editor.insertContent(insert.html);
+                        that.close();
+                    }
+                );
+
         }
-        saveToHistory();
-        this._insertIntoEditor(template, context);
+
     } //end of doinsert
 
-    static fetchRecorderDimensions(config) {
 
-        // Get return object
-        var sizes = {};
+    static generateRandomString() {
+        var length = 8;
+        var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        var result = '';
 
-        //get video sizes]
-        switch (config.videoskin) {
-            case SKIN.ONETWOTHREE:
-            case SKIN.SCREEN:
-                sizes.videowidth = 441; //(because the @media CSS is for <=440)
-                sizes.videoheight = 540;
-                break;
-            case SKIN.BMR:
-                sizes.videowidth = 441; //(because the @media CSS is for <=440)
-                sizes.videoheight = 500;
-                break;
-            default:
-                sizes.videowidth = 441;
-                sizes.videoheight = 450;
-
+        for (var i = 0; i < length; i++) {
+            var randomIndex = Math.floor(Math.random() * characters.length);
+            result += characters.charAt(randomIndex);
         }
-        switch (config.audioskin) {
-            default:
-                sizes.audiowidth = 450;
-                sizes.audioheight = 350;
-                break;
-        }
-        return sizes;
+
+        return result;
     }
 
     static getModalClass() {
-        const modalType = `${component}/rec_audio`;
+        const modalType = `${component}/media_recorder`;
         const registration = ModalRegistry.get(modalType);
         if (registration) {
             return registration.module;
         }
 
-        const AudioModal = class extends Modal {
+        const MediaModal = class extends Modal {
             static TYPE = modalType;
             static TEMPLATE = `${component}/root`;
         };
 
-        ModalRegistry.register(AudioModal.TYPE, AudioModal, AudioModal.TEMPLATE);
-        return AudioModal;
+        ModalRegistry.register(MediaModal.TYPE, MediaModal, MediaModal.TEMPLATE);
+        return MediaModal;
     }
 
     static getModalContext(editor) {
 
         var context = {};
         var config = getCloudpoodll(editor);
+        Log.debug(config);
         
         //stuff declared in common
         context.CSS = CSS;
@@ -837,6 +655,7 @@ export default class {
         context.showupload = config.showupload== '1';
         context.showoptions = config.showoptions== '1';
         context.showexpiredays = config.showexpiredays== '1';
+        context.cansubtitle = config.cp_cansubtitle;
 
         //set up the cloudpoodll div
         context.CP={};
@@ -853,16 +672,23 @@ export default class {
         context.CP.videoskin = config.cp_videoskin;
         context.CP.fallback = config.fallback;
         context.CP.sizes = this.fetchRecorderDimensions(config);
+
+        //get defaults for expire days and subtitle language
+        context['expire_' + config.cp_expiredays] =true;
+        context['lang_' + config.cp_language] =true;
+
         return context;
     }
 
     static async display(editor) {
         const ModalClass = this.getModalClass();
         const templatecontext = this.getModalContext(editor);
+        const elementid = this.generateRandomString();
 
         //TO DO set these settigns according to the toolbar button which was clicked
         templatecontext.isaudio=true;
         templatecontext.recorder = 'audio'; //(audio or video)
+        templatecontext.elementid = elementid;
 
         const modal = await ModalFactory.create({
             type: ModalClass.TYPE,
@@ -871,8 +697,11 @@ export default class {
         });
 
         // Set up the Recorder.
-        const recorder = new this(editor, modal, templatecontext);
+        const recorder = new this(editor, elementid, modal, templatecontext);
         recorder.loadRecorders();
+        //recorder.initHistory();
+
+
        // if (recorder.isReady()) {
             modal.show();
         //}

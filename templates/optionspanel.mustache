@@ -27,15 +27,15 @@
           <br>
           <label>{{#str}} expiredays, tiny_poodll{{/str}}&nbsp;
               <select id="{{elementid}}_{{CSS.EXPIREDAYS_SELECT}}" class="{{CSS.EXPIREDAYS_SELECT}}">
-                  <option value="1" {{#expire1}}selected="selected"{{/expire1}}>1</option>
-                  <option value="3" {{#expire3}}selected="selected"{{/expire3}}>3</option>
-                  <option value="7" {{#expire7}}selected="selected"{{/expire7}}>7</option>
-                  <option value="30" {{#expire30}}selected="selected"{{/expire30}}>30</option>
-                  <option value="90" {{#expire90}}selected="selected"{{/expire90}}>90</option>
-                  <option value="180" {{#expire180}}selected="selected"{{/expire180}}>180</option>
-                  <option value="365" {{#expire365}}selected="selected"{{/expire365}}>365</option>
-                  <option value="730" {{#expire730}}selected="selected"{{/expire730}}>730</option>
-                  <option value="9999" {{#expire9999}}selected="selected"{{/expire9999}}>{{#str}} forever, tiny_poodll {{/str}}</option>
+                  <option value="1" {{#expire_1}}selected="selected"{{/expire_1}}>1</option>
+                  <option value="3" {{#expire_3}}selected="selected"{{/expire_3}}>3</option>
+                  <option value="7" {{#expire_7}}selected="selected"{{/expire_7}}>7</option>
+                  <option value="30" {{#expire_30}}selected="selected"{{/expire_30}}>30</option>
+                  <option value="90" {{#expire_90}}selected="selected"{{/expire_90}}>90</option>
+                  <option value="180" {{#expire_180}}selected="selected"{{/expire_180}}>180</option>
+                  <option value="365" {{#expire_365}}selected="selected"{{/expire_365}}>365</option>
+                  <option value="730" {{#expire_730}}selected="selected"{{/expire_730}}>730</option>
+                  <option value="9999" {{#expire_9999}}selected="selected"{{/expire_9999}}>{{#str}} forever, tiny_poodll {{/str}}</option>
               </select>
               </label>
       {{/showexpiredays}}
@@ -55,36 +55,36 @@
               </label>
           <br><label>{{#str}} speakerlanguage, tiny_poodll{{/str}}&nbsp;
               <select id="{{elementid}}_{{CSS.LANG_SELECT}}" class="{{CSS.LANG_SELECT}}">
-                  <option value="{{LANG.ARAE}}" {{#useARAE}}selected="selected"{{/useARAE}}>{{#str}} ar-ae, tiny_poodll {{/str}}</option>
-                  <option value="{{LANG.ARSA}}" {{#useARSA}}selected="selected"{{/useARSA}}>{{#str}} ar-sa, tiny_poodll {{/str}}</option>
-                  <option value="{{LANG.DEDE}}" {{#useDEDE}}selected="selected"{{/useDEDE}}>{{#str}} de-de, tiny_poodll {{/str}}</option>
-                  <option value="{{LANG.DECH}}" {{#useDECH}}selected="selected"{{/useDECH}}>{{#str}} de-ch, tiny_poodll {{/str}}</option>
-                  <option value="{{LANG.ENUS}}" {{#useENUS}}selected="selected"{{/useENUS}}>{{#str}} en-us, tiny_poodll {{/str}}</option>
-                  <option value="{{LANG.ENGB}}" {{#useENGB}}selected="selected"{{/useENGB}}>{{#str}} en-gb, tiny_poodll {{/str}}</option>
-                  <option value="{{LANG.ENAU}}" {{#useENAU}}selected="selected"{{/useENAU}}>{{#str}} en-au, tiny_poodll {{/str}}</option>
-                  <option value="{{LANG.ENIN}}" {{#useENIN}}selected="selected"{{/useENIN}}>{{#str}} en-in, tiny_poodll {{/str}}</option>
-                  <option value="{{LANG.ENIE}}" {{#useENIE}}selected="selected"{{/useENIE}}>{{#str}} en-ie, tiny_poodll {{/str}}</option>
-                  <option value="{{LANG.ENWL}}" {{#useENWL}}selected="selected"{{/useENWL}}>{{#str}} en-wl, tiny_poodll {{/str}}</option>
-                  <option value="{{LANG.ENAB}}" {{#useENAB}}selected="selected"{{/useENAB}}>{{#str}} en-ab, tiny_poodll {{/str}}</option>
-                  <option value="{{LANG.ESUS}}" {{#useESUS}}selected="selected"{{/useESUS}}>{{#str}} es-us, tiny_poodll {{/str}}</option>
-                  <option value="{{LANG.ESES}}" {{#useESES}}selected="selected"{{/useESES}}>{{#str}} es-es, tiny_poodll {{/str}}</option>
-                  <option value="{{LANG.FAIR}}" {{#useFAIR}}selected="selected"{{/useFAIR}}>{{#str}} fa-ir, tiny_poodll {{/str}}</option>
-                  <option value="{{LANG.FRFR}}" {{#useFRFR}}selected="selected"{{/useFRFR}}>{{#str}} fr-fr, tiny_poodll {{/str}}</option>
-                  <option value="{{LANG.FRCA}}" {{#useFRCA}}selected="selected"{{/useFRCA}}>{{#str}} fr-ca, tiny_poodll {{/str}}</option>
-                  <option value="{{LANG.HEIL}}" {{#useHEIL}}selected="selected"{{/useHEIL}}>{{#str}} he-il, tiny_poodll {{/str}}</option>
-                  <option value="{{LANG.HIIN}}" {{#useHIIN}}selected="selected"{{/useHIIN}}>{{#str}} hi-in, tiny_poodll {{/str}}</option>
-                  <option value="{{LANG.ITIT}}" {{#useITIT}}selected="selected"{{/useITIT}}>{{#str}} it-it, tiny_poodll {{/str}}</option>
-                  <option value="{{LANG.JAJP}}" {{#useJAJP}}selected="selected"{{/useJAJP}}>{{#str}} ja-jp, tiny_poodll {{/str}}</option>
-                  <option value="{{LANG.KOKR}}" {{#useKOKR}}selected="selected"{{/useKOKR}}>{{#str}} ko-kr, tiny_poodll {{/str}}</option>
-                  <option value="{{LANG.MSMY}}" {{#useMSMY}}selected="selected"{{/useMSMY}}>{{#str}} ms-my, tiny_poodll {{/str}}</option>
-                  <option value="{{LANG.NLNL}}" {{#useNLNL}}selected="selected"{{/useNLNL}}>{{#str}} nl-nl, tiny_poodll {{/str}}</option>
-                  <option value="{{LANG.PTPT}}" {{#usePTPT}}selected="selected"{{/usePTPT}}>{{#str}} pt-pt, tiny_poodll {{/str}}</option>
-                  <option value="{{LANG.PTBR}}" {{#usePTBR}}selected="selected"{{/usePTBR}}>{{#str}} pt-br, tiny_poodll {{/str}}</option>
-                  <option value="{{LANG.RURU}}" {{#useRURU}}selected="selected"{{/useRURU}}>{{#str}} ru-ru, tiny_poodll {{/str}}</option>
-                  <option value="{{LANG.TAIN}}" {{#useTAIN}}selected="selected"{{/useTAIN}}>{{#str}} ta-in, tiny_poodll {{/str}}</option>
-                  <option value="{{LANG.TEIN}}" {{#useTEIN}}selected="selected"{{/useTEIN}}>{{#str}} te-in, tiny_poodll {{/str}}</option>
-                  <option value="{{LANG.TRTR}}" {{#useTRTR}}selected="selected"{{/useTRTR}}>{{#str}} tr-tr, tiny_poodll {{/str}}</option>
-                  <option value="{{LANG.ZHCN}}" {{#useZHCN}}selected="selected"{{/useZHCN}}>{{#str}} zh-cn, tiny_poodll {{/str}}</option>
+                  <option value="{{LANG.ARAE}}" {{#lang_ar-AE}}selected="selected"{{/lang_ar-AE}}>{{#str}} ar-ae, tiny_poodll {{/str}}</option>
+                  <option value="{{LANG.ARSA}}" {{#lang_ar-SA}}selected="selected"{{/lang_ar-SA}}>{{#str}} ar-sa, tiny_poodll {{/str}}</option>
+                  <option value="{{LANG.DEDE}}" {{#lang_de-DE}}selected="selected"{{/lang_de-DE}}>{{#str}} de-de, tiny_poodll {{/str}}</option>
+                  <option value="{{LANG.DECH}}" {{#lang_de-CH}}selected="selected"{{/lang_de-CH}}>{{#str}} de-ch, tiny_poodll {{/str}}</option>
+                  <option value="{{LANG.ENUS}}" {{#lang_en-US}}selected="selected"{{/lang_en-US}}>{{#str}} en-us, tiny_poodll {{/str}}</option>
+                  <option value="{{LANG.ENGB}}" {{#lang_en-GB}}selected="selected"{{/lang_en-GB}}>{{#str}} en-gb, tiny_poodll {{/str}}</option>
+                  <option value="{{LANG.ENAU}}" {{#lang_en-AU}}selected="selected"{{/lang_en-AU}}>{{#str}} en-au, tiny_poodll {{/str}}</option>
+                  <option value="{{LANG.ENIN}}" {{#lang_en-IN}}selected="selected"{{/lang_en-IN}}>{{#str}} en-in, tiny_poodll {{/str}}</option>
+                  <option value="{{LANG.ENIE}}" {{#lang_en-IE}}selected="selected"{{/lang_en-IE}}>{{#str}} en-ie, tiny_poodll {{/str}}</option>
+                  <option value="{{LANG.ENWL}}" {{#lang_en-WL}}selected="selected"{{/lang_en-WL}}>{{#str}} en-wl, tiny_poodll {{/str}}</option>
+                  <option value="{{LANG.ENAB}}" {{#lang_en-AB}}selected="selected"{{/lang_en-AB}}>{{#str}} en-ab, tiny_poodll {{/str}}</option>
+                  <option value="{{LANG.ESUS}}" {{#lang_es-US}}selected="selected"{{/lang_es-US}}>{{#str}} es-us, tiny_poodll {{/str}}</option>
+                  <option value="{{LANG.ESES}}" {{#lang_es-ES}}selected="selected"{{/lang_es-ES}}>{{#str}} es-es, tiny_poodll {{/str}}</option>
+                  <option value="{{LANG.FAIR}}" {{#lang_fa-IR}}selected="selected"{{/lang_fa-IR}}>{{#str}} fa-ir, tiny_poodll {{/str}}</option>
+                  <option value="{{LANG.FRFR}}" {{#lang_fr-FR}}selected="selected"{{/lang_fr-FR}}>{{#str}} fr-fr, tiny_poodll {{/str}}</option>
+                  <option value="{{LANG.FRCA}}" {{#lang_fr-CA}}selected="selected"{{/lang_fr-CA}}>{{#str}} fr-ca, tiny_poodll {{/str}}</option>
+                  <option value="{{LANG.HEIL}}" {{#lang_he-IL}}selected="selected"{{/lang_he-IL}}>{{#str}} he-il, tiny_poodll {{/str}}</option>
+                  <option value="{{LANG.HIIN}}" {{#lang_hi-IN}}selected="selected"{{/lang_hi-IN}}>{{#str}} hi-in, tiny_poodll {{/str}}</option>
+                  <option value="{{LANG.ITIT}}" {{#lang_it-IT}}selected="selected"{{/lang_it-IT}}>{{#str}} it-it, tiny_poodll {{/str}}</option>
+                  <option value="{{LANG.JAJP}}" {{#lang_ja-JP}}selected="selected"{{/lang_ja-JP}}>{{#str}} ja-jp, tiny_poodll {{/str}}</option>
+                  <option value="{{LANG.KOKR}}" {{#lang_ko-KR}}selected="selected"{{/lang_ko-KR}}>{{#str}} ko-kr, tiny_poodll {{/str}}</option>
+                  <option value="{{LANG.MSMY}}" {{#lang_ms-MY}}selected="selected"{{/lang_ms-MY}}>{{#str}} ms-my, tiny_poodll {{/str}}</option>
+                  <option value="{{LANG.NLNL}}" {{#lang_nl-NL}}selected="selected"{{/lang_nl-NL}}>{{#str}} nl-nl, tiny_poodll {{/str}}</option>
+                  <option value="{{LANG.PTPT}}" {{#lang_pt-PT}}selected="selected"{{/lang_pt-PT}}>{{#str}} pt-pt, tiny_poodll {{/str}}</option>
+                  <option value="{{LANG.PTBR}}" {{#lang_pt-BR}}selected="selected"{{/lang_pt-BR}}>{{#str}} pt-br, tiny_poodll {{/str}}</option>
+                  <option value="{{LANG.RURU}}" {{#lang_ru-RU}}selected="selected"{{/lang_ru-RU}}>{{#str}} ru-ru, tiny_poodll {{/str}}</option>
+                  <option value="{{LANG.TAIN}}" {{#lang_ta-IN}}selected="selected"{{/lang_ta-IN}}>{{#str}} ta-in, tiny_poodll {{/str}}</option>
+                  <option value="{{LANG.TEIN}}" {{#lang_te-IN}}selected="selected"{{/lang_te-IN}}>{{#str}} te-in, tiny_poodll {{/str}}</option>
+                  <option value="{{LANG.TRTR}}" {{#lang_tr-TR}}selected="selected"{{/lang_tr-TR}}>{{#str}} tr-tr, tiny_poodll {{/str}}</option>
+                  <option value="{{LANG.ZHCN}}" {{#lang_zh-CN}}selected="selected"{{/lang_zh-CN}}>{{#str}} zh-cn, tiny_poodll {{/str}}</option>
                   </select>
               </label>
           <br>{{#str}} subtitleinstructions, tiny_poodll {{/str}}

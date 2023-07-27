@@ -24,7 +24,7 @@
 
 {{#data}}
 <br/>
-<div id="tiny_poodll_history_preview_div" style="display: none;">
+<div id="tiny_poodll_history_preview_div">
     <div class="mask gradient-card align-items-center">
         <div class="container d-flex justify-content-center">
             <div class="card">
@@ -40,9 +40,6 @@
                             <source src="{{mediaurl}}" type="video/mp4">
                         </video>
                     {{/isVideo}}
-                    <br/>
-                    <br/>
-                    <a href="#" class="btn btn-info" data-content="history" role="button">&laquo; {{# str }} historyback, tiny_poodll {{/ str }}</a>
                 </div>
             </div>
         </div>
@@ -50,20 +47,3 @@
 </div>
 {{/data}}
 
-{{#js}}
-    require(['jquery'], function($) {
-       $('#tiny_poodll_history_preview_div').slideDown('slow');
-
-         $('.tiny_poodll_form a[data-content="history"]').on("click", function () {
-               const loadingHtml = "<br /><div class=\"d-flex justify-content-center\">\n" +
-                   "  <div class=\"spinner-border\" role=\"status\">\n" +
-                   "    <span class=\"sr-only\">{{# str }} loading, tiny_poodll {{/ str }}</span>\n" +
-                   "  </div>\n" +
-                   "</div><br />";
-
-               $('div[data-field="history"]').html(loadingHtml);
-
-               Y.namespace('M.tiny_poodll').Button.prototype.loadHistory();
-           });
-    });
-{{/js}}

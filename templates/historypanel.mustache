@@ -23,8 +23,8 @@
     The purpose of this template is to render recorder type history by user.
   }}
 <div data-medium-type="{{CSS.HISTORY}}" data-field="history" data-loaded="false" class="tab-pane" id="{{elementid}}_{{CSS.HISTORY}}">
-    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css"/>
-    <table cellpadding="0" cellspacing="0" width="100%" class="table" id="atto_cloud_history_table">
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css"/>
+    <table cellpadding="0" cellspacing="0" width="100%" class="table" id="tiny_poodll_history_table">
         <thead>
         <tr>
             <th>&nbsp;</th>
@@ -52,110 +52,4 @@
         </tbody>
     </table>
 </div>
-{{#js}}
-    require(
-    ['jquery',
-     '//cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js',
-     'core/inplace_editable',
-     'core/modal_factory',
-     'core/modal_events',
-     'core/ajax',
-     'core/templates'
-    ], function($, datatable, inplace, ModalFactory, ModalEvents, ajax,templates) {
-                // Handle the delete.
-                $('#atto_cloud_history_table').on('click', 'a[data-action-type="delete"]', function() {
-                        var clickedLink = $(this);
-                         ModalFactory.create({
-                            type: ModalFactory.types.SAVE_CANCEL,
-                            title: '{{# str }} deleteitem, tiny_poodll {{/ str }}',
-                            body: '{{# str }} confirmdelete, tiny_poodll {{/ str }}',
-                          }, clickedLink    )
-                          .then(function(modal) {
-                              modal.setSaveButtonText('Delete');
-                              var root = modal.getRoot();
-                                root.on(ModalEvents.save, function() {
-                                    let historyRow = clickedLink.parents('table').parents('tr').first().prev('.history-row');
-                                    let historyItemId = historyRow.data('history-id');
-                                    let childHistoryRow = clickedLink.parents('table').parents('tr').first();
-
-                                   ajax.call([{
-                                       methodname: 'tiny_poodll_history_archive',
-                                       args: {'id': historyItemId},
-                                       done: function () {
-                                            childHistoryRow.fadeOut(300, function(){ $(this).remove();});
-                                            historyRow.fadeOut(300, function(){ $(this).remove();});
-                                       }
-                                   }]);
-                                });
-                            modal.show();
-                          });
-                });
-
-                // Handle the insert.
-                $('#atto_cloud_history_table').on('click', 'a[data-action-type="add"]', function() {
-                    Y.namespace('M.tiny_poodll').Button.prototype.insertHistoryItem(this);
-                });
-
-                // Handle the preview.
-                $('#atto_cloud_history_table').on('click', 'a[data-action-type="preview"]', function() {
-                    const loadingHtml = '<br /><div class="d-flex justify-content-center">\n' +
-                                        '  <div class=\"spinner-border\" role="status">\n' +
-                                        '    <span class=\"sr-only\">{{# str }} loading, tiny_poodll {{/ str }}</span>\n' +
-                                        '  </div>\n' +
-                                        '</div><br />';
-
-                    $('div[data-field="history"]').html(loadingHtml);
-                    Y.namespace('M.tiny_poodll').Button.prototype.loadHistoryPreview(this);
-                });
-
-                var table = $('#atto_cloud_history_table').dataTable({
-                    "language": {
-                        "decimal":        "",
-                        "emptyTable":     "{{# str }} emptyTable, tiny_poodll {{/ str }}",
-                        "info":           "{{# str }} info, tiny_poodll {{/ str }}",
-                        "infoEmpty":      "{{# str }} loading, tiny_poodll {{/ str }}",
-                        "infoFiltered":   "{{# str }} infoFiltered, tiny_poodll {{/ str }}",
-                        "infoPostFix":    "",
-                        "thousands":      "{{# str }} thousands, tiny_poodll {{/ str }}",
-                        "lengthMenu":     "{{# str }} lengthMenu, tiny_poodll {{/ str }}",
-                        "loadingRecords": "{{# str }} loadingRecords, tiny_poodll {{/ str }}",
-                        "processing":     "{{# str }} processing, tiny_poodll {{/ str }}",
-                        "search":         "{{# str }} search, tiny_poodll {{/ str }}",
-                        "zeroRecords":    "{{# str }} zeroRecords, tiny_poodll {{/ str }}",
-                        "paginate": {
-                            "first":      "{{# str }} first, tiny_poodll {{/ str }}",
-                            "last":       "{{# str }} last, tiny_poodll {{/ str }}",
-                            "next":       "{{# str }} next, tiny_poodll {{/ str }}",
-                            "previous":   "{{# str }} previous, tiny_poodll {{/ str }}"
-                        },
-                        "aria": {
-                            "sortAscending":  "{{# str }} sortAscending, tiny_poodll {{/ str }}",
-                            "sortDescending": "{{# str }} sortDescending, tiny_poodll {{/ str }}"
-                        }
-                    },
-                    "columnDefs": [
-                        { "targets": 0, "orderable": false, "searchable": false, "width": "8%"},
-                        { "targets": 2, "width": "20%"},
-                    ]
-                });
-
-                $('#atto_cloud_history_table tbody').on('click', 'td.details-control', function () {
-                    var tr = jQuery(this).closest('tr');
-                    var row = table.api().row( tr );
-
-                    if ( row.child.isShown() ) {
-                        row.child.hide();
-                        tr.removeClass('shown');
-                    }
-                    else {
-                        var rowdata = {"name": "id", "value": tr.data('history-id') };
-                        templates.render('tiny_poodll/historyrow',rowdata).then(
-                            function(html,js){
-                                row.child(html).show();
-                                tr.addClass('shown');
-                            }
-                        );
-                    }
-                } );
-    });
-{{/js}}
+  <div data-medium-type="{{CSS.HISTORY}}" data-field="history-" data-loaded="false" class="tab-pane" id="{{elementid}}_{{CSS.HISTORY}}">

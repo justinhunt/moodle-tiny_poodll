@@ -1,0 +1,9 @@
+<audio controls="true" crossorigin="anonymous" controlsList="nodownload" preload="metadata">
+        {{#includesourcetrack}}
+            <source src="{{sourceurl}}" type="{{sourcemimetype}}">
+        {{/includesourcetrack}}
+        <source src="{{url}}" type="{{urlmimetype}}">
+        {{#issubtitling}}
+            <track src="{{subtitleurl}}" kind="captions" srclang="{{CP.language}}" label="{{CP.language}}" default="true">
+        {{/issubtitling}}
+</audio>
