@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Manager for cloudpoodll history data.
+ * Manager for poodll history data.
  *
  * @package   tiny_poodll
  * @copyright 2023 Justin Hunt {@link http://www.poodll.com}

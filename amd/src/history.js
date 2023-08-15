@@ -31,10 +31,13 @@ import * as ModalEvents from 'core/modal_events';
 import Modal from "./modal";
 import ModalRegistry from 'core/modal_registry';
 import Log from 'core/log';
+import {get_strings as getStrings} from "core/str";
 
 export default class {
 
     itemdata= [];
+    component = 'tiny_poodll';
+    strings = {};
 
     /**
      * Constructor for the Tiny Poodll Recorder History Tab
@@ -84,7 +87,25 @@ export default class {
                 that.initDataTables();
                 that.registerEvents();
         });
+        this.initStrings();
+    }
 
+    initStrings() {
+        var that =this;
+        getStrings([
+            { "key": "previewitem", "component": this.component },
+            { "key": "deleteitem", "component": this.component },
+            { "key": "confirmdelete", "component": this.component },
+            { "key": "loading", "component": this.component },
+            { "key": "insertitem", "component": this.component }
+        ]).done(function (s) {
+            var i = 0;
+            that.strings.previewitem = s[i++];
+            that.strings.deleteitem = s[i++];
+            that.strings.confirmdelete = s[i++];
+            that.strings.loading = s[i++];
+            that.strings.insertitem = s[i++];
+        });
     }
 
     initDataTables() {
@@ -110,11 +131,11 @@ export default class {
            var clickedLink = $(this);
            ModalFactory.create({
                type: ModalFactory.types.SAVE_CANCEL,
-               title: '{{# str }} deleteitem, tiny_poodll {{/ str }}',
-               body: '{{# str }} confirmdelete, tiny_poodll {{/ str }}',
+               title: that.strings.deleteitem,
+               body: that.strings.confirmdelete,
            }, clickedLink    )
                .then(function(modal) {
-                   modal.setSaveButtonText('Delete');
+                   modal.setSaveButtonText(that.strings.deleteitem);
                    var root = modal.getRoot();
                    root.on(ModalEvents.cancel, function() {modal.hide();});
                    root.on(ModalEvents.save, function() {
@@ -149,7 +170,7 @@ export default class {
            Log.debug('preview clicked');
            const loadingHtml = '<br /><div class="d-flex justify-content-center">\n' +
                '  <div class=\"spinner-border\" role="status">\n' +
-               '    <span class=\"sr-only\">{{# str }} loading, tiny_poodll {{/ str }}</span>\n' +
+               '    <span class=\"sr-only\">' + that.strings.loading + '</span>\n' +
                '  </div>\n' +
                '</div><br />';
 
@@ -240,11 +261,11 @@ export default class {
 
                 ModalFactory.create({
                     type: ModalFactory.types.SAVE_CANCEL,
-                    title: '{{# str }} deleteitem, tiny_poodll {{/ str }}',
+                    title: that.strings.previewitem,
                     body: html,
                 }, clickedLink )
                     .then(function(modal) {
-                        modal.setSaveButtonText('Insert');
+                        modal.setSaveButtonText(that.strings.insertitem);
                         var root = modal.getRoot();
                         root.on(ModalEvents.cancel, function() {modal.hide();});
                         root.on(ModalEvents.save, function() {
