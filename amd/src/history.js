@@ -69,6 +69,7 @@ export default class {
                     if(item.hasOwnProperty('dateofentry')) {
                         item.displaydateofentry = _formatUnixDate(item.dateofentry);
                         item.displayfiletitle = item.filetitle.substring(0, config.filetitledisplaylength) + '...';
+                        item.editablefield = [JSON.parse(item.editabletitle)];
                         that.itemdata[item.id] = item;
                     }
                 });

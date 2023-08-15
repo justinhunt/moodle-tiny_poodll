@@ -166,11 +166,11 @@ function xxxtiny_poodll_widgets_fetch_filter_properties($propstring) {
 
 
 
-function xxxtiny_poodll_inplace_editable($itemtype, $itemid, $newvalue) {
+function tiny_poodll_inplace_editable($itemtype, $itemid, $newvalue) {
     if ($itemtype === 'filetitle') {
         global $DB, $USER;
         $record = $DB->get_record(constants::M_TABLE, array('id' => $itemid), '*', MUST_EXIST);
-        external_api::validate_context(context_system::instance());
+        \core_external\external_api::validate_context(context_system::instance());
         require_capability('tiny/poodll:visible', context_system::instance());
         $newvalue = clean_param($newvalue, PARAM_TEXT);
 

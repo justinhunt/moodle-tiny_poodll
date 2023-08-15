@@ -45,7 +45,9 @@
             <td class="details-control">
                     {{# pix }} t/collapsed, core{{/ pix }}
             </td>
-            <td>{{{editabletitle}}}</td>
+            {{#editablefield}}
+            <td>{{> core/inplace_editable}} </td>
+            {{/editablefield}}
             <td>{{displaydateofentry}}</td>
         </tr>
         {{/data}}

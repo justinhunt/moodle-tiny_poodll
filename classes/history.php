@@ -72,9 +72,10 @@ class history {
      * @throws dml_exception
      */
     public function get($recordertype = '') {
-        global $USER, $OUTPUT;
+        global $USER,$PAGE ,$OUTPUT;
 
         $searchparams = ['userid' => $this->user->id, 'archived' => "0"];
+        $renderer = $PAGE->get_renderer(constants::M_COMPONENT);
 
         if (!empty($recordertype)) {
             $searchparams['recordertype'] = $recordertype;
@@ -100,7 +101,8 @@ class history {
                 $item->filetitle,
                 'Edit file display title',
                 'New value for ' . format_string($item->filetitle));
-            $item->editabletitle = $OUTPUT->render($tmpl);
+         //   $item->editabletitle = $OUTPUT->render($tmpl);
+                $item->editabletitle = json_encode($tmpl->export_for_template($renderer));
         }
 
         return $items;

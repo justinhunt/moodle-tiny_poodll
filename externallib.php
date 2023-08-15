@@ -213,7 +213,7 @@ class tiny_poodll_history_external extends external_api {
                     'sourcemimetype' => new external_value(PARAM_TEXT, 'Source mimetype', VALUE_OPTIONAL),
                     'subtitling' => new external_value(PARAM_INT, 'Subtitling enabled', VALUE_OPTIONAL),
                     'subtitleurl' => new external_value(PARAM_URL, 'Subtitle URL', VALUE_OPTIONAL),
-                    'editabletitle' => new external_value(PARAM_RAW, 'Editable Title', VALUE_OPTIONAL),
+                    'editabletitle' => new external_value(PARAM_TEXT, 'Subtitle URL', VALUE_OPTIONAL),
                 ])
             )
         ]);
