@@ -38,6 +38,7 @@ import {isAllowed} from './options';
 import audio_recorder from './audio_recorder';
 import video_recorder from './video_recorder';
 import screen_recorder from './screen_recorder';
+import widget_page from './widget_page';
 
 /**
  * Handle the action for your plugin.
@@ -146,7 +147,7 @@ export const getSetup = async() => {
             editor.ui.registry.addButton(widgetsButtonName, {
                 icon: 'widgetsicon',
                 tooltip: widgetsButtonNameTitle,
-                onAction: () => handleAction(editor),
+                onAction: () => widget_page.display(editor),
             });
 
             // Add the widgets Menu Item.
@@ -154,7 +155,7 @@ export const getSetup = async() => {
             editor.ui.registry.addMenuItem(widgetsMenuItemName, {
                 icon: 'widgetsicon',
                 text: widgetsMenuItemNameTitle,
-                onAction: () => handleAction(editor),
+                onAction: () => widget_page.display(editor),
             });
 
         }

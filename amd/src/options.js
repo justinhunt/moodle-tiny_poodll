@@ -68,7 +68,7 @@ export const register = (editor) => {
  * @param {tinyMCE} editor The editor instance to fetch the value for
  * @returns {object} The value of the audioallowed option
  */
-export const getCloudpoodll = (editor) => editor.options.get(cloudpoodllName);
+export const getConfig = (editor) => editor.options.get(cloudpoodllName);
 
 
 /**
