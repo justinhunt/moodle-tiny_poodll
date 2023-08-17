@@ -1,0 +1,26 @@
+
+
+<div id="{{elementid}}_{{innerform}}" class="mdl-align">
+<h4 class="tiny_poodll_widget_instructions">{{name}}</h4>
+<div class="tiny_poodll_widget_instructions">{{{instructions}}}</div>
+</div>
+
+<form class="tiny_poodll_form" id="{{uniqid}}_tiny_poodll_form">
+    <div class="root tab-content">
+        {{#variables}}
+        <div id="{{uniqid}}"><span class="tiny_poodll_widgetlabel">{{displayname}}</span>
+            {{#isarray}}
+                    <select data-type="{{key}}" class="tiny_poodll_templatevariable_{{templateindex}} tiny_poodll_widget_field">
+                        {{#default}}
+                        <option value="{{.}}">{{.}}</option>
+                        {{/default}}
+                    </select>
+            {{/isarray}}
+            {{^isarray}}
+                <input type="text" data-type="{{key}}" class="tiny_poodll_templatevariable_{{templateindex}} tiny_poodll_widget_field" value="{{default}}"></input>
+            {{/isarray}}
+        </div>
+        {{/variables}}
+    </div>
+    <button type="button" data-templateindex="{{templateindex}}" class="btn btn-primary tiny_poodll_widgetinsertbutton" data-action="insert">{{#str}} insert, tiny_poodll {{/str}}</button>
+</form>

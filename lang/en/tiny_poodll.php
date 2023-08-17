@@ -234,3 +234,4 @@ $string['freetrial_desc'] = "A dialog should appear that allows you to register 
 $string['fillcredentials']="Set API user and secret with existing credentials";
 $string['previewitem'] = 'Preview item';
 $string['insertitem'] = 'Insert item';
+$string['insert'] = 'Insert';

@@ -62,6 +62,9 @@ export default class {
         this.config = config;//getData(editor).params;
         this.modal = modal;
         this.modalRoot = modal.getRoot()[0];
+    }
+
+    init(){
         this.registerEvents();
         this.ready = true;
     }
@@ -86,102 +89,131 @@ export default class {
         var that =this;
         const $root = this.modal.getRoot();
         const root = $root[0];
-        const recorders = root.querySelectorAll('.' + CSS.CP_SWAP);
+        //const widgetbuttons = root.getElementsByClassName('tiny_poodll_widgetbutton');
 
-    }
+        ///listen for button clicks
+        root.addEventListener("click", function(e) {
+            var widgetchosen = e.target.closest(".tiny_poodll_widgetchoosebutton");
+            var widgetinserted = e.target.closest(".tiny_poodll_widgetinsertbutton");
 
+            //If widget chosen from widget page (chooser)
+            if (widgetchosen) {
+                e.preventDefault();
+                //get our widget from the configs
 
-    /**
-     * Display the widgets dialog
-     *
-     * @method _displayDialogue
-     * @private
-     */
-    displayWidgetsDialogue(e, clickedicon) {
-        e.preventDefault();
-        var width = 800;
+                var templateindex = e.target.getAttribute('data-templateindex');
+                var widget = that.getWidget(templateindex);
 
-        var dialogue = this.getDialogue({
-            headerContent: M.util.get_string('dialogtitle', COMPONENTNAME),
-            width: width + 'px',
-            focusAfterHide: clickedicon
-        });
-        //dialog doesn't detect changes in width without this
-        //if you reuse the dialog, this seems necessary
-        if (dialogue.width !== width + 'px') {
-            dialogue.set('width', width + 'px');
-        }
+                if (widget == null) {
+                    Log.debug("That template not found: " + templateindex);
+                    Log.debug(that.config);
+                    return;
+                } else {
+                    //show the widget form
+                    that.showTemplateForm(e, widget);
+                }
+            }
 
+            //If widget inserted from widget options page
+            if (widgetinserted) {
+                e.preventDefault();
+                var templateindex = e.target.getAttribute('data-templateindex');
+                var widget = that.getWidget(templateindex);
+                if (widget == null) {
+                    Log.debug("That template not found: " + templateindex);
+                    Log.debug(that.config);
+                    return;
+                } else {
+                    //get the filter string
+                    var filterstring = that.getFilterString(widget);
+                    //insert the filter string into the editor
+                    that.editor.insertContent(filterstring);
+                    //close the modal
+                    that.close();
+                }
+            }
+        });//end of button click listener
 
-        //create content container
-        var bodycontent = Y.Node.create('<div></div>');
+    }//end of register events
 
-        //create and append header
-        var template = Y.Handlebars.compile(BUTTONSHEADERTEMPLATE),
-            content = Y.Node.create(template({
-                headertext: M.util.get_string('chooseinsert', COMPONENTNAME)
-            }));
-        bodycontent.append(content);
-
-        //get button nodes
-        var buttons = this._getButtonsForNames(clickedicon);
-
-        Y.Array.each(buttons, function (button) {
-            bodycontent.append(button);
-        }, bodycontent);
-
-        //set to bodycontent
-        dialogue.set('bodyContent', bodycontent);
-        dialogue.show();
-
-        this.markUpdated();
-    }
-
-
-
-
-
-    /**
-     * Inserts the link or media element onto the page
-     * @method doInsert
-     * @param  mediaurl media URL to the AWS object
-     * @param  mediafilename File name of the AWS object
-     * @param  sourceurl URL to the AWS object
-     * @param  sourcemimetype MimeType of the AWS object
-     * @private
-     */
-    doInsert(mediaurl, mediafilename, sourceurl, sourcemimetype) {
-
-        var that = this;
-
-        //do the actual inserting
-        switch (this.config.insertmethod) {
-
-            case INSERTMETHOD.TAGS:
-                this.fetchMediaTags(mediaurl, mediafilename, sourceurl, sourcemimetype).then(
-                    function(insert){
-                        Log.debug('inserting into editor');
-                        that.editor.insertContent(insert.html);
-                        that.close();
-                        //addToast(await getString('recordinguploaded', component));
-                    }
-                );
+    getWidget(templateindex) {
+        var widget = null;
+        for (var i = 0; i < this.config.widgets.length; i++) {
+            if (this.config.widgets[i].templateindex == templateindex) {
+                widget = this.config.widgets[i];
                 break;
+            }
+        }
+        return widget;
+    }
 
-            case INSERTMETHOD.LINK:
-            default:
-                this.fetchMediaLink(mediaurl, mediafilename, sourceurl, sourcemimetype).then(
-                    function(insert){
-                        Log.debug('inserting into editor');
-                        Log.debug(insert.html);
-                        that.editor.insertContent(insert.html);
-                        that.close();
-                    }
-                );
+    /**
+     * Display the chosen widgets template form
+     *
+     * @method showTemplateForm
+     * @private
+     */
+    showTemplateForm(e, widget) {
 
+        Log.debug('showing the template form for: ' + widget.name);
+        var that = this;
+        Templates.render('tiny_poodll/widgetoptions', widget).then(function (html, js) {
+            Log.debug('replacing contents of options panel');
+            Templates.replaceNodeContents('.tiny_poodll_widgets_optionspanel', html, js);
+            Log.debug('replacing done');
+        }).catch(
+            function (e){Log.debug(e);}
+        );
+
+    }
+
+    /**
+     * Inserts the users input onto the page
+     * @method _getWidgetsInsert
+     * @private
+     */
+    getFilterString(widget) {
+
+        var retstring = "{POODLL:type=";
+        var widgetkey = widget.key;
+        var thevariables = widget.variables;
+        var thedefaults = widget.defaults;
+        var theend = widget.end;
+        var defaultsarray = thedefaults;
+
+        //add key to return string
+        retstring += '"' + widgetkey + '"';
+
+        //add variables to return string
+        for (var i = 0; i < thevariables.length; i++) {
+            var thevalue=null;
+            var elements=null;
+            //if select box
+            if(thevariables[i].isarray) {
+                elements = this.modalRoot.querySelectorAll('select[data-type="' + thevariables[i].key + '"]');
+            //if input box
+            }else{
+                elements = this.modalRoot.querySelectorAll('input[data-type="' + thevariables[i].key + '"]');
+            }
+            if (elements.length > 0) {
+                thevalue = elements[0].value;
+            }
+           if(thevalue!==null){
+               retstring += ',' + thevariables[i].key + '="' + thevalue + '"';
+           }
         }
 
-    } //end of doinsert
+        //close out return string
+        retstring += "}";
+
+        //add an end tag, if we need to
+        if (theend) {
+            retstring += '<br/>{POODLL:type="' + widgetkey + '_end"}';
+        }
+        return retstring;
+
+    }
+
 
 
     static generateRandomString() {
@@ -223,7 +255,7 @@ export default class {
         context.CSS = CSS;
 
         //insert method
-      //  context.insertmethod = config.insertmethod;
+        context.widgets = config.widgets;
 
         return context;
     }
@@ -239,6 +271,9 @@ export default class {
             large: true,
         });
 
+        // Set up the Widgets Panel and show the modal
+        const widgetspanel = new this(editor, elementid, modal, templatecontext);
+        widgetspanel.init();
 
         modal.show();
         return modal;
