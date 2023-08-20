@@ -42,3 +42,26 @@ div.tiny_poodll_widget_buttons {
 .tiny_poodll_widget_field {
     margin-top: 5px;
 }
+/* widget options CSS */
+#tiny_poodll_widgets_selectorpanel {
+   /* width: 300px; */
+   /* height: 200px; */
+    /* position: absolute; */
+    top: 0;
+    left: 0;
+    transition: left 0.8s ease-in-out, right 0.8s ease-in-out;
+}
+
+#tiny_poodll_widgets_optionspanel {
+    /* width: 300px; */
+    /* height: 200px; */
+    /* position: absolute; */
+    background-color: lightgray;
+    top: 0;
+    left: 0;
+    transition: left 0.8s ease-in-out, right 0.8s ease-in-out;
+}
+
+.tiny_poodll_hidden {
+    display: none;
+}

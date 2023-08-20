@@ -95,6 +95,7 @@ export default class {
         root.addEventListener("click", function(e) {
             var widgetchosen = e.target.closest(".tiny_poodll_widgetchoosebutton");
             var widgetinserted = e.target.closest(".tiny_poodll_widgetinsertbutton");
+            var widgetcancelled = e.target.closest(".tiny_poodll_widgetcancelledbutton");
 
             //If widget chosen from widget page (chooser)
             if (widgetchosen) {
@@ -110,7 +111,7 @@ export default class {
                     return;
                 } else {
                     //show the widget form
-                    that.showTemplateForm(e, widget);
+                    that.showOptionsPanel(e, widget);
                 }
             }
 
@@ -131,6 +132,15 @@ export default class {
                     //close the modal
                     that.close();
                 }
+            }
+
+            //If widget options cancelled
+            if (widgetcancelled) {
+                e.preventDefault();
+
+                //show the widget form
+                that.hideOptionsPanel(e, widget);
+
             }
         });//end of button click listener
 
@@ -153,18 +163,53 @@ export default class {
      * @method showTemplateForm
      * @private
      */
-    showTemplateForm(e, widget) {
-
-        Log.debug('showing the template form for: ' + widget.name);
+    showOptionsPanel(e, widget) {
         var that = this;
+        Log.debug('showing the template form for: ' + widget.name);
+
+        that.modalRoot.querySelector('#tiny_poodll_widgets_optionspanel');
         Templates.render('tiny_poodll/widgetoptions', widget).then(function (html, js) {
+            var optionspanel = that.modalRoot.querySelector('#tiny_poodll_widgets_optionspanel');
+            var selectorpanel = that.modalRoot.querySelector('#tiny_poodll_widgets_selectorpanel');
             Log.debug('replacing contents of options panel');
-            Templates.replaceNodeContents('.tiny_poodll_widgets_optionspanel', html, js);
-            Log.debug('replacing done');
+
+            //this would fail if the options panel had already made in insert, and was re-used. Weird.
+            //replaced with: optionspanel.innerHTML = html;
+            //Templates.replaceNodeContents('#tiny_poodll_widgets_optionspanel', html, js);
+            optionspanel.innerHTML = html;
+
+
+            //hide and show the selector and options panels
+            selectorpanel.classList.add('tiny_poodll_hidden');
+            optionspanel.classList.remove('tiny_poodll_hidden');
+            //trigger the animations
+            optionspanel.style.left=0;
+            selectorpanel.style.left= selectorpanel.offsetWidth * -1 + 'px'
         }).catch(
             function (e){Log.debug(e);}
         );
 
+    }
+
+    /**
+     * Display the chosen widgets template form
+     *
+     * @method showTemplateForm
+     * @private
+     */
+    hideOptionsPanel() {
+        var that = this;
+        Log.debug('hiding the template options form ');
+
+        //animate it out
+        var optionspanel = that.modalRoot.querySelector('#tiny_poodll_widgets_optionspanel');
+        var selectorpanel = that.modalRoot.querySelector('#tiny_poodll_widgets_selectorpanel');
+        //hide and show the selector and options panels
+        selectorpanel.classList.remove('tiny_poodll_hidden');
+        optionspanel.classList.add('tiny_poodll_hidden');
+        //trigger the animations
+        optionspanel.style.left=optionspanel.offsetWidth  +  'px';
+        selectorpanel.style.left=0;
     }
 
     /**

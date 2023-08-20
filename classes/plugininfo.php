@@ -215,7 +215,7 @@ class plugininfo extends plugin implements plugin_with_configuration, plugin_wit
             }
 
             //instructions
-            $widget->instructions = rawurlencode($templates['templateinstructions_' . $tempindex]);
+            $widget->instructions =$templates['templateinstructions_' . $tempindex];// rawurlencode($templates['templateinstructions_' . $tempindex]);
 
             //stash the defaults for this template
             $widgetdefaults = self::fetch_widget_properties($templates['templatedefaults_' . $tempindex]);

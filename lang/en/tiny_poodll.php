@@ -235,3 +235,4 @@ $string['fillcredentials']="Set API user and secret with existing credentials";
 $string['previewitem'] = 'Preview item';
 $string['insertitem'] = 'Insert item';
 $string['insert'] = 'Insert';
+$string['back'] = 'Back';

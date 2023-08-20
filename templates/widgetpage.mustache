@@ -1,17 +1,19 @@
 {{< core/modal }}
 {{$title}}The widget pane man{{/title}}
     {{$body}}
-<form class="tiny_poodll_form" id="{{uniqid}}_tiny_poodll_form">
-    <div class="root tab-content">
-      <div>Widget content Goes Here</div>
-        {{#widgets}}
-        <div id="{{uniqid}}" class="tiny_poodll_widget_buttons mdl-align" style="width:30%;">
-        <button style="width: 100%;" data-templateindex="{{templateindex}}" class="tiny_poodll_widgetchoosebutton btn btn-info d-block">{{name}}</button>
+<div id="tiny_poodll_widgets_selectorpanel" class="tiny_poodll_widgets_selectorpanel">
+    <form class="tiny_poodll_form" id="{{uniqid}}_tiny_poodll_form">
+        <div class="root tab-content">
+          <div>Widget content Goes Here</div>
+            {{#widgets}}
+            <div id="{{uniqid}}" class="tiny_poodll_widget_buttons mdl-align" style="width:30%;">
+            <button style="width: 100%;" data-templateindex="{{templateindex}}" class="tiny_poodll_widgetchoosebutton btn btn-info d-block">{{name}}</button>
+            </div>
+            {{/widgets}}
         </div>
-        {{/widgets}}
-    </div>
-</form>
-<div class="tiny_poodll_widgets_optionspanel">
+    </form>
+</div>
+<div id="tiny_poodll_widgets_optionspanel" class="tiny_poodll_widgets_optionspanel tiny_poodll_hidden">
 </div>
     {{/body}}
     {{$footer}}
