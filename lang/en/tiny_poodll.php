@@ -33,8 +33,8 @@ $string['menuitem_recaudio'] = 'Record Audio';
 $string['menuitem_recscreen'] = 'Record Screen';
 $string['menuitem_recvideo'] = 'Record Video';
 $string['menuitem_widgets'] = 'Widgets';
-$string['pluginname'] = 'Poodll for TinyMCE';
-$string['privacy:metadata'] = 'Poodll for TinyMCE stores recordings in AWS S3 buckets via cloud.poodll.com.';
+$string['pluginname'] = 'Tiny Poodll';
+$string['privacy:metadata'] = 'Tiny Poodll stores recordings in AWS S3 buckets via cloud.poodll.com.';
 //--
 $string['cloudpoodll:allowwidgets'] ='Allow visibility of widgets icon';
 $string['cloudpoodll'] = 'Cloud Poodll';
@@ -189,8 +189,8 @@ $string['cloudpoodll:allowoptions'] = 'Allow Options Tab';
 $string['cloudpoodll:visible'] = 'Visible';
 
 $string['displaysubs'] = '{$a->subscriptionname} : expires {$a->expiredate}';
-$string['noapiuser'] = "No API user entered. Poodll for TinyMCE will not work correctly.";
-$string['noapisecret'] = "No API secret entered. Poodll for TinyMCE will not work correctly.";
+$string['noapiuser'] = "No API user entered. Tiny Poodll will not work correctly.";
+$string['noapisecret'] = "No API secret entered. Tiny Poodll will not work correctly.";
 $string['credentialsinvalid'] = "The API user and secret entered could not be used to get access. Please check them.";
 $string['appauthorised'] = "Tiny Poodll is authorised for this site.";
 $string['appnotauthorised'] = "Tiny Poodll  is NOT authorised for this site.";
