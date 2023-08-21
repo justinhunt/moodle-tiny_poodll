@@ -16,7 +16,7 @@
 /**
  * Common values helper for the Moodle tiny_poodll plugin.
  *
- * @module      plugintype_pluginname/common
+ * @module      tiny_poodll/common
  * @copyright   2023 Justin Hunt <justin@poodll.com>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -99,70 +99,5 @@ export default {
         CP_UPLOAD: `${component}_upload_cont`,
         CP_SWAP: `${component}_swapmeout`,
         TEMPLATEVARIABLE: `${component}_templatevariable`
-    },
-
-   TEMPLATES :{
-        HTML_MEDIA: {
-            VIDEO: '' +
-                '&nbsp;<video ' +
-                'controls="true" crossorigin="anonymous"  controlsList="nodownload" preload="metadata" style="width: 100%; max-width: 800px;"' +
-                '>' +
-                "{{#if includesourcetrack}}" +
-                '<source src="{{sourceurl}}" type="{{sourcemimetype}}">' +
-                "{{/if}}" +
-                '<source src="{{url}}" type="{{urlmimetype}}">' +
-                "{{#if issubtitling}}" +
-                '<track src="{{subtitleurl}}" kind="captions" srclang="{{CP.language}}" label="{{CP.language}}" default="true">' +
-                "{{/if}}" +
-                '</video>&nbsp;',
-            AUDIO: '' +
-                '&nbsp;<audio ' +
-                'controls="true" crossorigin="anonymous" controlsList="nodownload" preload="metadata"' +
-                '>' +
-                "{{#if includesourcetrack}}" +
-                '<source src="{{sourceurl}}" type="{{sourcemimetype}}">' +
-                "{{/if}}" +
-                '<source src="{{url}}" type="{{urlmimetype}}">' +
-                "{{#if issubtitling}}" +
-                '<track src="{{subtitleurl}}" kind="captions" srclang="{{CP.language}}" label="{{CP.language}}" default="true">' +
-                "{{/if}}" +
-                '</audio>&nbsp;',
-            LINK: '' +
-                "{{#if issubtitling}}" +
-                '&nbsp;<a href="{{url}}?data-subtitles={{subtitleurl}}&data-language={{CP.language}}"' +
-                "{{else}}" +
-                '&nbsp;<a href="{{url}}"' +
-                "{{/if}}" +
-                '>{{name}}</a>&nbsp;'
-        }
-    },
-
-    BUTTONSHEADERTEMPLATE: '<div id="{{elementid}}_{{innerform}}" class="mdl-align">' +
-        '<h4 class="' + CSS.HEADERTEXT + '">{{headertext}}</h4>' +
-        '</div>',
-
-    BUTTONTEMPLATE : '<div id="{{elementid}}_{{innerform}}" class="tiny_poodll_widget_buttons mdl-align" style="width:30%;">' +
-        '<button style="width: 100%;" class="' + CSS.NAMEBUTTON + '_{{templateindex}} btn btn-info d-block">{{name}}</button>' +
-        '</div>',
-
-    FIELDTEMPLATE: '<div id="{{elementid}}_{{innerform}}"><span class="atto_cloudpoodll_widgetlabel">{{label}}</span>' +
-        '&nbsp;<input type="text" class="' + CSS.TEMPLATEVARIABLE + '_{{variableindex}} tiny_poodll_widget_field" value="{{defaultvalue}}"></input>' +
-        '</div>',
-
-    SELECTCONTAINERTEMPLATE: '<div id="{{elementid}}_{{innerform}}"><span class="atto_cloudpoodll_widgetlabel">{{label}}</span></div>',
-
-    SELECTTEMPLATE: '<select class="' + CSS.TEMPLATEVARIABLE + '_{{variableindex}} tiny_poodll_widget_field"></select>',
-
-    OPTIONTEMPLATE: '<option value="{{option}}">{{option}}</option>',
-
-    SUBMITTEMPLATE: '<form class="atto_form">' +
-        '<div id="{{elementid}}_{{innerform}}" class="mdl-align">' +
-        '<button class="' + CSS.INPUTSUBMIT + '">{{inserttext}}</button>' +
-        '</div>' +
-        '</form>',
-
-   FIELDSHEADERTEMPLATE: '<div id="{{elementid}}_{{innerform}}" class="mdl-align">' +
-        '<h4 class="' + CSS.HEADERTEXT + '">{{headertext}} {{key}}</h4>' +
-        '<div class="' + CSS.INSTRUCTIONSTEXT + '">{{instructions}}</div>' +
-        '</div>'
+    }
 };

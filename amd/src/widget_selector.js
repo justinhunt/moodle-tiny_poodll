@@ -275,7 +275,7 @@ export default class {
     }
 
     static getModalClass() {
-        const modalType = `${component}/widgetpage`;
+        const modalType = `${component}/widgetselector`;
         const registration = ModalRegistry.get(modalType);
         if (registration) {
             return registration.module;
@@ -283,7 +283,7 @@ export default class {
 
         const WidgetModal = class extends Modal {
             static TYPE = modalType;
-            static TEMPLATE = `${component}/widgetpage`;
+            static TEMPLATE = `${component}/widgetselector`;
         };
 
         ModalRegistry.register(WidgetModal.TYPE, WidgetModal, WidgetModal.TEMPLATE);

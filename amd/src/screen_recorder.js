@@ -16,7 +16,7 @@
 /**
  * Tiny Poodll - screen recorder configuration.
  *
- * @module      tiny_poodll/audio_recorder
+ * @module      tiny_poodll/screen_recorder
  * @copyright   2023 Justin Hunt <justin@poodll.com>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -40,37 +40,17 @@ export default class Screen extends BaseClass {
         return sizes;
     }
 
+    static getModalContext(editor) {
+        var tc = super.getModalContext(editor);
+        tc.isscreen=true;
+        tc.recorder = 'video'; //(audio or video or screen)
 
-    static async display(editor) {
-        const ModalClass = this.getModalClass();
-        const templatecontext = this.getModalContext(editor);
-        const elementid = this.generateRandomString();
-
-        //TO DO set these settigns according to the toolbar button which was clicked
-        templatecontext.isscreen=true;
-        templatecontext.recorder = 'video';
-        templatecontext.elementid = elementid;
-        if(templatecontext.subtitlevideobydefault){
-            templatecontext.subtitling=true;
+        if(tc.subtitlevideobydefault){
+            tc.subtitling=true;
         }else{
-            templatecontext.subtitling=false;
+            tc.subtitling=false;
         }
-
-        const modal = await ModalFactory.create({
-            type: ModalClass.TYPE,
-            templateContext: templatecontext,
-            large: true,
-        });
-
-        // Set up the Recorder.
-        const recorder = new this(editor, elementid, modal, templatecontext);
-        recorder.loadRecorders();
-        recorder.initHistory();
-
-        // if (recorder.isReady()) {
-        modal.show();
-        //}
-        return modal;
+        return tc;
     }
 
     /**

@@ -236,3 +236,9 @@ $string['previewitem'] = 'Preview item';
 $string['insertitem'] = 'Insert item';
 $string['insert'] = 'Insert';
 $string['back'] = 'Back';
+$string['videorecorder'] = 'Video Recorder';
+$string['audiorecorder'] = 'Audio Recorder';
+$string['screenrecorder'] = 'Screen Recorder';
+$string['widgetsselector'] = 'Widget Selector';
+$string['widgetsselector_instructions'] = 'Choose a widget to insert into the editor area.';
+

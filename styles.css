@@ -17,21 +17,31 @@
 #id_responsive_tiny_poodll_audio_cont {
     position: relative;
     overflow: hidden;
-    padding-top: 110%;
+    padding-top: 78%;
 }
-
+@media (min-width: 450px) {
+    #id_responsive_tiny_poodll_audio_cont {
+        padding-top: 350px;
+    }
+}
+#id_responsive_tiny_poodll_video_cont,
+#id_responsive_tiny_poodll_screen_cont,
 #id_responsive_tiny_poodll_upload_cont {
     position: relative;
     overflow: hidden;
-    padding-top: 110%;
+    padding-top: 123%;
 }
 
-#id_responsive_tiny_poodll_video_cont,
-#id_responsive_tiny_poodll_screen_cont {
-    position: relative;
-    overflow: hidden;
-    padding-top: 130%;
+@media (min-width: 440px) {
+    #id_responsive_tiny_poodll_video_cont,
+    #id_responsive_tiny_poodll_screen_cont,
+    #id_responsive_tiny_poodll_upload_cont {
+        position: relative;
+        overflow: hidden;
+        padding-top: 540px;
+    }
 }
+
 div.tiny_poodll_widget_buttons {
     display: inline-block;
     margin: 5px;
@@ -56,10 +66,18 @@ div.tiny_poodll_widget_buttons {
     /* width: 300px; */
     /* height: 200px; */
     /* position: absolute; */
-    background-color: lightgray;
     top: 0;
     left: 0;
     transition: left 0.8s ease-in-out, right 0.8s ease-in-out;
+}
+
+.tiny_poodll_widgetoptionsbuttons_cont{
+    margin: 10px;
+    margin-left: 100px;
+}
+.tiny_poodll_widgetoptionlabel {
+    padding: 10px;
+    width: 100px;
 }
 
 .tiny_poodll_hidden {

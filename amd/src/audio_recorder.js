@@ -45,37 +45,17 @@ export default class Audio extends BaseClass {
     }
 
 
+    static getModalContext(editor) {
+        var tc = super.getModalContext(editor);
+        tc.isaudio=true;
+        tc.recorder = 'audio'; //(audio or video or screen)
 
-    static async display(editor) {
-        const ModalClass = this.getModalClass();
-        const templatecontext = this.getModalContext(editor);
-        const elementid = this.generateRandomString();
-
-        //TO DO set these settigns according to the toolbar button which was clicked
-        templatecontext.isaudio=true;
-        templatecontext.recorder = 'audio'; //(audio or video)
-        templatecontext.elementid = elementid;
-        if(templatecontext.subtitleaudiobydefault){
-            templatecontext.subtitling=true;
+        if(tc.subtitleaudiobydefault){
+            tc.subtitling=true;
         }else{
-            templatecontext.subtitling=false;
+            tc.subtitling=false;
         }
-
-        const modal = await ModalFactory.create({
-            type: ModalClass.TYPE,
-            templateContext: templatecontext,
-            large: true,
-        });
-
-        // Set up the Recorder.
-        const recorder = new this(editor, elementid, modal, templatecontext);
-        recorder.loadRecorders();
-        recorder.initHistory();
-
-        // if (recorder.isReady()) {
-        modal.show();
-        //}
-        return modal;
+        return tc;
     }
 
     /**

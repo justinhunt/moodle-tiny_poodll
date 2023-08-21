@@ -1,5 +1,9 @@
 {{< core/modal }}
-{{$title}}The recorder man{{/title}}
+    {{$title}}
+        {{#isvideo}}{{#str}} videorecorder, tiny_poodll {{/str}}{{/isvideo}}
+        {{#isaudio}}{{#str}} audiorecorder, tiny_poodll {{/str}}{{/isaudio}}
+        {{#isscreen}}{{#str}} screenrecorder, tiny_poodll {{/str}}{{/isscreen}}
+        {{/title}}
     {{$body}}
 <form class="tiny_poodll_form" id="{{elementid}}_tiny_poodll_form">
     {{> tiny_poodll/menu}}

@@ -53,41 +53,19 @@ export default class Video extends BaseClass {
         return sizes;
     }
 
+    static getModalContext(editor) {
+        var tc = super.getModalContext(editor);
+        tc.isvideo=true;
+        tc.recorder = 'video'; //(audio or video or screen)
 
-
-    static async display(editor) {
-        const ModalClass = this.getModalClass();
-        const templatecontext = this.getModalContext(editor);
-        const elementid = this.generateRandomString();
-
-        //TO DO set these settigns according to the toolbar button which was clicked
-        templatecontext.isvideo=true;
-        templatecontext.recorder = 'video';
-        templatecontext.elementid = elementid;
-        if(templatecontext.subtitlevideobydefault){
-            templatecontext.subtitling=true;
+        if(tc.subtitlevideobydefault){
+            tc.subtitling=true;
         }else{
-            templatecontext.subtitling=false;
+            tc.subtitling=false;
         }
-
-        const modal = await ModalFactory.create({
-            type: ModalClass.TYPE,
-            templateContext: templatecontext,
-            large: true,
-        });
-
-        // Set up the Recorder.
-        const recorder = new this(editor, elementid, modal, templatecontext);
-        recorder.loadRecorders();
-        recorder.initHistory();
-
-
-        // if (recorder.isReady()) {
-        modal.show();
-        //}
-
-        return modal;
+        return tc;
     }
+
 
     /**
      * Creates the media html5 tags based on the recorder type.

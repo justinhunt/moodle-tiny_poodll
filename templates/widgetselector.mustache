@@ -1,10 +1,10 @@
 {{< core/modal }}
-{{$title}}The widget pane man{{/title}}
+{{$title}}{{#str}} widgetsselector, tiny_poodll {{/str}}{{/title}}
     {{$body}}
 <div id="tiny_poodll_widgets_selectorpanel" class="tiny_poodll_widgets_selectorpanel">
     <form class="tiny_poodll_form" id="{{uniqid}}_tiny_poodll_form">
         <div class="root tab-content">
-          <div>Widget content Goes Here</div>
+          <div>{{#str}} widgetsselector_instructions, tiny_poodll {{/str}}</div>
             {{#widgets}}
             <div id="{{uniqid}}" class="tiny_poodll_widget_buttons mdl-align" style="width:30%;">
             <button style="width: 100%;" data-templateindex="{{templateindex}}" class="tiny_poodll_widgetchoosebutton btn btn-info d-block">{{name}}</button>

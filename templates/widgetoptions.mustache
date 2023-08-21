@@ -7,21 +7,23 @@
 <form class="tiny_poodll_form" id="{{uniqid}}_tiny_poodll_form">
     <div class="root tab-content">
         {{#variables}}
-        <div id="{{uniqid}}"><span class="tiny_poodll_widgetlabel">{{displayname}}</span>
+        <div><label for="{{key}}" class="tiny_poodll_widgetoptionlabel">{{displayname}}</label>
             {{#isarray}}
-                    <select data-type="{{key}}" class="tiny_poodll_templatevariable_{{templateindex}} tiny_poodll_widget_field">
+                    <select data-type="{{key}}" name="{{key}}" id="{{key}}" class="tiny_poodll_templatevariable_{{templateindex}} tiny_poodll_widget_field">
                         {{#default}}
                         <option value="{{.}}">{{.}}</option>
                         {{/default}}
                     </select>
             {{/isarray}}
             {{^isarray}}
-                <input type="text" data-type="{{key}}" class="tiny_poodll_templatevariable_{{templateindex}} tiny_poodll_widget_field" value="{{default}}"></input>
+                <input type="text" data-type="{{key}}" name="{{key}}" id="{{key}}" class="tiny_poodll_templatevariable_{{templateindex}} tiny_poodll_widget_field" value="{{default}}"></input>
             {{/isarray}}
         </div>
         {{/variables}}
     </div>
+    <div class="tiny_poodll_widgetoptionsbuttons_cont">
+        <button type="button" data-templateindex="{{templateindex}}" class="btn btn-secondary tiny_poodll_widgetcancelledbutton" data-action="insert">{{#str}} back, tiny_poodll  {{/str}}</button>
+        <button type="button" data-templateindex="{{templateindex}}" class="btn btn-primary tiny_poodll_widgetinsertbutton" data-action="insert">{{#str}} insert, tiny_poodll {{/str}}</button>
+    </div>
 
-    <button type="button" data-templateindex="{{templateindex}}" class="btn btn-primary tiny_poodll_widgetinsertbutton" data-action="insert">{{#str}} insert, tiny_poodll {{/str}}</button>
-    <button type="button" data-templateindex="{{templateindex}}" class="btn btn-secondary tiny_poodll_widgetcancelledbutton" data-action="insert">{{#str}} back, tiny_poodll  {{/str}}</button>
 </form>

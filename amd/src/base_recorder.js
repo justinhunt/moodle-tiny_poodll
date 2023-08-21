@@ -346,7 +346,7 @@ export default class {
 
         const MediaModal = class extends Modal {
             static TYPE = modalType;
-            static TEMPLATE = `${component}/root`;
+            static TEMPLATE = `${component}/recorders`;
         };
 
         ModalRegistry.register(MediaModal.TYPE, MediaModal, MediaModal.TEMPLATE);
@@ -409,10 +409,6 @@ export default class {
         const ModalClass = this.getModalClass();
         const templatecontext = this.getModalContext(editor);
         const elementid = this.generateRandomString();
-
-        //TO DO set these settigns according to the toolbar button which was clicked
-        templatecontext.isaudio=true;
-        templatecontext.recorder = 'audio'; //(audio or video)
         templatecontext.elementid = elementid;
 
         const modal = await ModalFactory.create({
@@ -424,12 +420,9 @@ export default class {
         // Set up the Recorder.
         const recorder = new this(editor, elementid, modal, templatecontext);
         recorder.loadRecorders();
-        //recorder.initHistory();
+        recorder.initHistory();
 
-
-       // if (recorder.isReady()) {
-            modal.show();
-        //}
+        modal.show();
         return modal;
     }
 
