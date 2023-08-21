@@ -14,19 +14,20 @@
     border: 0;
 }
 
-#id_responsive_tiny_poodll_audio_cont {
+#id_responsive_tiny_poodll_audio_cont,
+#id_responsive_tiny_poodll_upload_cont {
     position: relative;
     overflow: hidden;
     padding-top: 78%;
 }
 @media (min-width: 450px) {
-    #id_responsive_tiny_poodll_audio_cont {
+    #id_responsive_tiny_poodll_audio_cont,
+    #id_responsive_tiny_poodll_upload_cont {
         padding-top: 350px;
     }
 }
 #id_responsive_tiny_poodll_video_cont,
-#id_responsive_tiny_poodll_screen_cont,
-#id_responsive_tiny_poodll_upload_cont {
+#id_responsive_tiny_poodll_screen_cont{
     position: relative;
     overflow: hidden;
     padding-top: 123%;
@@ -34,8 +35,7 @@
 
 @media (min-width: 440px) {
     #id_responsive_tiny_poodll_video_cont,
-    #id_responsive_tiny_poodll_screen_cont,
-    #id_responsive_tiny_poodll_upload_cont {
+    #id_responsive_tiny_poodll_screen_cont {
         position: relative;
         overflow: hidden;
         padding-top: 540px;

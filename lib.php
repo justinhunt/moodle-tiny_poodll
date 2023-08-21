@@ -61,7 +61,7 @@ function xxxxtiny_poodll_widgets_params_for_js() {
             continue;
         }
 
-        //make sure its to be shown in atto
+        //make sure its to be shown in Tiny (we use the old Atto setting so we can be backwards compat.)
         if (!$templates['template_showatto_' . $tempindex]) {
             continue;
         }

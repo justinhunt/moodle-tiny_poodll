@@ -199,7 +199,7 @@ class plugininfo extends plugin implements plugin_with_configuration, plugin_wit
                 continue;
             }
 
-            //make sure its to be shown in atto
+            //make sure its to be shown in TinyMCE (we use the old atto setting, so we can be backwards compat.)
             if (!$templates['template_showatto_' . $tempindex]) {
                 continue;
             }

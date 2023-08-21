@@ -16,7 +16,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * A token refreshing helper for the Cloud Poodll Atto Icon
+ * A token refreshing helper for the Tiny Poodll Icon
  *
  *
  * @package    tiny_poodll

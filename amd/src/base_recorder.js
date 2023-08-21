@@ -60,11 +60,7 @@ export default class {
      */
     constructor(editor,elementid, modal, config) {
         this.ready = false;
-/*
-        if (!this.checkAndWarnAboutBrowserCompatibility()) {
-            return;
-        }
-*/
+
         this.editor = editor;
         this.elementid = elementid;
         this.config = config;//getData(editor).params;
@@ -105,11 +101,6 @@ export default class {
         const root = $root[0];
         const recorders = root.querySelectorAll('.' + CSS.CP_SWAP);
 
-        /*
-        $root.on(ModalEvents.save, (event, modal) => {
-            handleDialogueSubmission(editor, modal, data);
-        });
-        */
 
         root.addEventListener('click', (e) => {
             const cbox = e.target.closest('[type="checkbox"]');
@@ -177,15 +168,6 @@ export default class {
 
         });
 
-    }
-
-
-    disableSubtitleCheckbox() {
-        //this function is never called, because if not transcribable, not shown
-        STATE.subtitlecheckbox.setAttribute('disabled', true);
-        var topnode = Y.one('#' + STATE.elementid + '_' + CSS.ATTO_CLOUDPOODLL_FORM);
-        topnode.all('.' + CSS.CP_SWAP).setAttribute('data-transcribe', '0');
-        topnode.all('.' + CSS.CP_SWAP).setAttribute('data-subtitle', '0');
     }
 
     /**
