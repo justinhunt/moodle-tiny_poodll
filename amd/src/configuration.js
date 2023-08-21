@@ -39,7 +39,7 @@ import {
 
 const getToolbarConfiguration = (instanceConfig) => {
     let toolbar = instanceConfig.toolbar;
-    toolbar = addToolbarButtons(toolbar, 'content', [
+    toolbar = addToolbarButtons(toolbar, 'insert', [
         recaudioButtonName,
         recvideoButtonName,
         recscreenButtonName,
@@ -51,7 +51,7 @@ const getToolbarConfiguration = (instanceConfig) => {
 
 const getMenuConfiguration = (instanceConfig) => {
     let menu = instanceConfig.menu;
-    menu = addMenubarItem(menu, 'content', [
+    menu = addMenubarItem(menu, 'insert', [
         recaudioMenuItemName,
         recvideoMenuItemName,
         recscreenMenuItemName,

@@ -87,7 +87,7 @@ export const getSetup = async() => {
     ]);
 
     return (editor) => {
-        // Register the Moodle SVG as an icon suitable for use as a TinyMCE toolbar button.
+        // Register the TinyMCE toolbar button.
         editor.ui.registry.addIcon('audioicon', audioIcon.html);
         editor.ui.registry.addIcon('videoicon', videoIcon.html);
         editor.ui.registry.addIcon('screenicon', screenIcon.html);
@@ -106,7 +106,7 @@ export const getSetup = async() => {
             editor.ui.registry.addMenuItem(recaudioMenuItemName, {
                 icon:  'audioicon',
                 text: recaudioMenuItemNameTitle,
-                onAction: () => handleAction(editor),
+                onAction: () => audio_recorder.display(editor),
             });
 
         }
