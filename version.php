@@ -25,5 +25,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'tiny_poodll';
-$plugin->release = '1.0.2';
+$plugin->maturity = MATURITY_STABLE;
+$plugin->release = '1.0.2 (Build 2023082300)';
+$plugin->requires = 2022112800;//Moodle 4.1.0
 $plugin->version = 2023082100;

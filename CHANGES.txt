@@ -1,2 +1,2 @@
-Version 1.0.2 (Build: 2023082100 )
+Version 1.0.2 (Build: 2023082300 )
 -First release of Tiny Poodll
