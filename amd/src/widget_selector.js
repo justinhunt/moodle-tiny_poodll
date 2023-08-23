@@ -21,20 +21,14 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-import {get_string as getString, get_strings as getStrings} from 'core/str';
-import Pending from 'core/pending';
 import Log from 'core/log';
 import {getConfig} from './options';
 
-import {add as addToast} from 'core/toast';
-import * as ModalEvents from 'core/modal_events';
 import * as ModalFactory from 'core/modal_factory';
 import * as Templates from 'core/templates';
-import {saveCancelPromise} from 'core/notification';
 import {prefetchStrings, prefetchTemplates} from 'core/prefetch';
 import Modal from "./modal";
 import ModalRegistry from 'core/modal_registry';
-import * as Notification from 'core/notification';
 
 import {
     component,
@@ -56,7 +50,6 @@ export default class {
      */
     constructor(editor,elementid, modal, config) {
         this.ready = false;
-
         this.editor = editor;
         this.elementid = elementid;
         this.config = config;//getData(editor).params;
@@ -105,7 +98,7 @@ export default class {
                 var templateindex = e.target.getAttribute('data-templateindex');
                 var widget = that.getWidget(templateindex);
 
-                if (widget == null) {
+                if (widget === null) {
                     Log.debug("That template not found: " + templateindex);
                     Log.debug(that.config);
                     return;
@@ -120,7 +113,7 @@ export default class {
                 e.preventDefault();
                 var templateindex = e.target.getAttribute('data-templateindex');
                 var widget = that.getWidget(templateindex);
-                if (widget == null) {
+                if (widget === null) {
                     Log.debug("That template not found: " + templateindex);
                     Log.debug(that.config);
                     return;
@@ -162,6 +155,8 @@ export default class {
      *
      * @method showTemplateForm
      * @private
+     * @param {Event} e The event that triggered the action
+     * @param {Object} widget The widget object
      */
     showOptionsPanel(e, widget) {
         var that = this;
@@ -184,7 +179,7 @@ export default class {
             optionspanel.classList.remove('tiny_poodll_hidden');
             //trigger the animations
             optionspanel.style.left=0;
-            selectorpanel.style.left= selectorpanel.offsetWidth * -1 + 'px'
+            selectorpanel.style.left= selectorpanel.offsetWidth * -1 + 'px';
         }).catch(
             function (e){Log.debug(e);}
         );
@@ -216,6 +211,7 @@ export default class {
      * Inserts the users input onto the page
      * @method _getWidgetsInsert
      * @private
+     * @param {Object} widget The widget object
      */
     getFilterString(widget) {
 
@@ -224,7 +220,6 @@ export default class {
         var thevariables = widget.variables;
         var thedefaults = widget.defaults;
         var theend = widget.end;
-        var defaultsarray = thedefaults;
 
         //add key to return string
         retstring += '"' + widgetkey + '"';

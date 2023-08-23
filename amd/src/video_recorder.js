@@ -22,9 +22,6 @@
  */
 
 import BaseClass from './base_recorder';
-import Modal from './modal';
-import ModalRegistry from 'core/modal_registry';
-import * as ModalFactory from 'core/modal_factory';
 import {component, SKIN} from "./common";
 import * as Templates from 'core/templates';
 import Log from 'core/log';
@@ -71,10 +68,10 @@ export default class Video extends BaseClass {
      * Creates the media html5 tags based on the recorder type.
      *
      * @method fetchMediaTags
-     * @param  mediaurl media URL to the AWS object
-     * @param  mediafilename File name of the AWS object
-     * @param  sourceurl URL to the AWS object
-     * @param  sourcemimetype MimeType of the AWS object
+     * @param {String} mediaurl media URL to the AWS object
+     * @param {String} mediafilename File name of the AWS object
+     * @param {String} sourceurl URL to the AWS object
+     * @param  {String} sourcemimetype MimeType of the AWS object
      * @private
      */
     fetchMediaTags(mediaurl, mediafilename, sourceurl, sourcemimetype) {
@@ -82,7 +79,8 @@ export default class Video extends BaseClass {
         context.url = mediaurl;
         context.name = mediafilename;
         context.issubtitling = this.config.subtitling && this.config.subtitling !== '0';
-        context.includesourcetrack = this.config.transcoding && (mediaurl !== sourceurl) && (sourceurl.slice(-3) !== 'wav') && (sourceurl !== false);
+        context.includesourcetrack = this.config.transcoding && (mediaurl !== sourceurl)
+            && (sourceurl.slice(-3) !== 'wav') && (sourceurl !== false);
         context.CP = this.config.CP;
         context.subtitleurl = mediaurl + '.vtt';
         context.sourceurl = sourceurl;

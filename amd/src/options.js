@@ -89,6 +89,6 @@ export const isAllowed = function(editor,rec_type) {
         case 'widgets':
             return editor.options.get(widgetsallowedName);
         default:
-            false;
+            return false;
     }
-}
+};

@@ -23,13 +23,11 @@
 
 
 import * as Ajax from 'core/ajax';
-import {component, INSERTMETHOD, SKIN} from "./common";
+import {component, CSS, INSERTMETHOD, SKIN} from "./common";
 import * as Templates from 'core/templates';
 import * as Notification from 'core/notification';
 import * as ModalFactory from 'core/modal_factory';
 import * as ModalEvents from 'core/modal_events';
-import Modal from "./modal";
-import ModalRegistry from 'core/modal_registry';
 import Log from 'core/log';
 import {get_strings as getStrings} from "core/str";
 
@@ -52,7 +50,7 @@ export default class {
              * Takes a mysql unix timestamp (in seconds) and converts to a display date.
              *
              * @method _formatUnixDate
-             * @param dateToFormat Date to format
+             * @param {integer} dateToFormat Date to format
              */
             function _formatUnixDate(dateToFormat) {
                 var dateObj = new Date(dateToFormat * 1000);
@@ -126,6 +124,8 @@ export default class {
        var that = this;
        Log.debug('events registering');
 
+       //TO DO remove all this jquery from the event code
+
        //handle the removal of an item from the history table
        $('#tiny_poodll_history_table').on('click', 'a[data-action-type="delete"]', function() {
            Log.debug('delete clicked');
@@ -152,7 +152,7 @@ export default class {
                                historyRow.fadeOut(300, function(){ $(this).remove();});
                            }
                        }]);
-                       modal.hide()
+                       modal.hide();
                    });
                    modal.show();
                });
@@ -223,7 +223,10 @@ export default class {
      * Creates the media html5 tags based on the recorder type.
      *
      * @method saveHistoryItem
-     * @param  historyItem
+     * @param  {string} mediaurl The url of the media file
+     * @param  {string} mediafilename The name of the media file
+     * @param  {string} sourceurl The url of the source file
+     * @param  {string} sourcemimetype The mimetype of the source file
      */
     saveHistoryItem(mediaurl, mediafilename, sourceurl, sourcemimetype) {
         Log.debug("ajax saving history item");
@@ -246,7 +249,8 @@ export default class {
      * Creates the media html5 tags based on the recorder type.
      *
      * @method loadHistoryPreview
-     * @param  historyItem
+     * @param  {integer} historyid The id of the history item
+     * @param  {object} clickedLink The link that was clicked
      */
     loadHistoryPreview(historyid, clickedLink){
         var that=this;
@@ -258,8 +262,6 @@ export default class {
         };
         Templates.render('tiny_poodll/historypreview', context)
             .then(function (html, js) {
-
-
                 ModalFactory.create({
                     type: ModalFactory.types.SAVE_CANCEL,
                     title: that.strings.previewitem,
@@ -276,22 +278,16 @@ export default class {
                         });
                         modal.show();
                     });
-
-
-
             }).fail(function (ex) {
             Notification.exception(ex);
         });
-
-
-
     }
 
     /**
      * Inserts the histopry item
      *
      * @method insertHistoryItem
-     * @param  historyid
+     * @param  {integer} historyid The id of the history item
      */
    insertHistoryItem(historyid) {
         var that=this;
@@ -309,6 +305,12 @@ export default class {
 
     }
 
+    /**
+     * Fetches a history item from the itemdata array
+     * @method fetchHistoryItem
+     * @param {integer} historyid The id of the history item
+     * @returns {*}
+     */
    fetchHistoryItem(historyid) {
        return this.itemdata[historyid];
        /*

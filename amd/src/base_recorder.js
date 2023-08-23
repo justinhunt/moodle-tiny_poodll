@@ -21,21 +21,15 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-import {get_string as getString, get_strings as getStrings} from 'core/str';
-import Pending from 'core/pending';
+
 import Log from 'core/log';
 import {getConfig} from './options';
-import uploadFile from 'editor_tiny/uploader';
-import {add as addToast} from 'core/toast';
-import * as ModalEvents from 'core/modal_events';
 import * as ModalFactory from 'core/modal_factory';
 import * as Templates from 'core/templates';
-import {saveCancelPromise} from 'core/notification';
 import {prefetchStrings, prefetchTemplates} from 'core/prefetch';
 import Modal from "./modal";
 import ModalRegistry from 'core/modal_registry';
 import History from 'tiny_poodll/history';
-import * as Notification from 'core/notification';
 
 import {
     component,
@@ -146,7 +140,7 @@ export default class {
                 switch(dropdown.id){
                     case that.elementid + '_' + CSS.LANG_SELECT:
                         //TO DO - save this value, or leave it as is ... do we need to keep track of it, for insert method?
-                        CLOUDPOODLL.language =dropdown.get('value');
+                        that.config.CP.language =dropdown.get('value');
                         recorders.forEach((recorder) => {
                             recorder.setAttribute('data-language', that.config.CP.language);
                             recorder.setAttribute('data-alreadyparsed', 'false');
@@ -198,19 +192,20 @@ export default class {
                         if (evt.action === 'started') {
                             //if user toggled subtitle checkbox any time from now, the recording would be lost
                             var subtitlecheckbox= that.getElement(CSS.SUBTITLE_CHECKBOX);
-                            if (subtitlecheckbox != null) {
+                            if (subtitlecheckbox !== null) {
                                 subtitlecheckbox.disabled = true;
                             }
                         }
                         break;
                     case 'awaitingprocessing':
                         //we delay  a second to allow the sourcefile to be copied to correct location
-                        //the source filename will sometimes be incorrect because we do not know it when creating the dynamo db entry
-                        // but an incorrect ext is just confusing. most players will ignore it and deal with contents
+                        //the source filename will sometimes be incorrect, we do not know it when creating the db entry
+                        // but its ok. Most players ignore the extension and deal with contents
                         if (!that.uploaded) {
                             setTimeout(function () {
                                 var guessed_ext = loader.fetch_guessed_extension(that.recorder );
-                                var sourcefilename = evt.sourcefilename.split('.').slice(0, -1).join('.') + '.' + guessed_ext;
+                                var sourcefilename = evt.sourcefilename.split('.').slice(0, -1).join('.')
+                                    + '.' + guessed_ext;
                                 var sourceurl = evt.s3root + sourcefilename;
                                 //save history
                                 Log.debug("saving history item");
@@ -224,7 +219,7 @@ export default class {
                         break;
                     case 'filesubmitted':
                         //we will probably never get here because awaiting processing will fire first
-                        //we do not use this event, but it arrives when the final file is ready. (much earlier in case of non-transcode)
+                        //we do not use this event, but it arrives when the final file is ready.
 
                         break;
                     case 'error':
@@ -241,10 +236,10 @@ export default class {
      * Creates the media link based on the recorder type.
      *
      * @method fetchMediaLink
-     * @param  mediaurl media URL to the AWS object
-     * @param  mediafilename File name of the AWS object
-     * @param  sourceurl URL to the AWS object
-     * @param  sourcemimetype MimeType of the AWS object
+     * @param {string} mediaurl media URL to the AWS object
+     * @param {string} mediafilename File name of the AWS object
+     * @param {string} sourceurl URL to the AWS object
+     * @param {string} sourcemimetype MimeType of the AWS object
      * @private
      */
     fetchMediaLink(mediaurl, mediafilename, sourceurl, sourcemimetype) {
@@ -252,7 +247,8 @@ export default class {
         context.url = mediaurl;
         context.name = mediafilename;
         context.issubtitling = this.config.subtitling && this.config.subtitling !== '0';
-        context.includesourcetrack = this.config.transcoding && (mediaurl !== sourceurl) && (sourceurl.slice(-3) !== 'wav') && (sourceurl !== false);
+        context.includesourcetrack = this.config.transcoding && (mediaurl !== sourceurl)
+            && (sourceurl.slice(-3) !== 'wav') && (sourceurl !== false);
         context.CP = this.config.CP;
         context.subtitleurl = mediaurl + '.vtt';
         context.sourceurl = sourceurl;
@@ -266,10 +262,10 @@ export default class {
     /**
      * Inserts the link or media element onto the page
      * @method doInsert
-     * @param  mediaurl media URL to the AWS object
-     * @param  mediafilename File name of the AWS object
-     * @param  sourceurl URL to the AWS object
-     * @param  sourcemimetype MimeType of the AWS object
+     * @param {string} mediaurl media URL to the AWS object
+     * @param {string} mediafilename File name of the AWS object
+     * @param {string} sourceurl URL to the AWS object
+     * @param {string} sourcemimetype MimeType of the AWS object
      * @private
      */
     doInsert(mediaurl, mediafilename, sourceurl, sourcemimetype) {
@@ -340,7 +336,6 @@ export default class {
         var context = {};
         var config = getConfig(editor);
         Log.debug(config);
-        
         //stuff declared in common
         context.CSS = CSS;
 
@@ -407,5 +402,4 @@ export default class {
         modal.show();
         return modal;
     }
-
-} //end of class
+}

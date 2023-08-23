@@ -40,14 +40,6 @@ import video_recorder from './video_recorder';
 import screen_recorder from './screen_recorder';
 import widget_selector from './widget_selector';
 
-/**
- * Handle the action for your plugin.
- * @param {TinyMCE.editor} editor The tinyMCE editor instance.
- */
-const handleAction = (editor) => {
-    // TODO Handle the action.
-    window.console.log(editor);
-};
 
 /**
  * Get the setup function for the buttons.
