@@ -22,6 +22,7 @@ CREDITS
 
 This module was developed by Poodll and Justin Hunt.
 
+
 ===============================================
 To INSTALL the Tiny Poodll for Moodle TinyMCE
 ===============================================
@@ -33,7 +34,7 @@ To INSTALL the Tiny Poodll for Moodle TinyMCE
     1. Clone this plugin to your server
 
        cd /PATH/TO/MOODLE
-       git clone -q https://github.com/gbateson/moodle-mod_englishcentral lib/editor/tiny/plugins/poodll
+       git clone -q https://github.com/justinhunt/moodle-tiny_poodll.git lib/editor/tiny/plugins/poodll
 
     2. Add this plugin to the GIT exclude file
 
@@ -96,7 +97,7 @@ To INSTALL the Tiny Poodll for Moodle TinyMCE
 to CONFIGURE the Tiny Poodll module
 =================================================
 
-The settings for the EnglishCentral module can be found at:
+The settings for the Tiny Poodll module can be found at:
 
     [Moodle Site]/Site Administration -> Plugins -> Text Editors -> TinyMCE -> Tiny Poodll
 
