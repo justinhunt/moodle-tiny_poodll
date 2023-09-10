@@ -1,2 +1,5 @@
+Version 1.0.3 (Build: 2023091000 )
+-A minor release to fix up a version number issue
+
 Version 1.0.2 (Build: 2023082300 )
 -First release of Tiny Poodll
