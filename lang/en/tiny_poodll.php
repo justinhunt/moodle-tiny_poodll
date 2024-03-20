@@ -35,6 +35,17 @@ $string['menuitem_recvideo'] = 'Record Video';
 $string['menuitem_widgets'] = 'Widgets';
 $string['pluginname'] = 'Tiny Poodll';
 $string['privacy:metadata'] = 'Tiny Poodll stores recordings in AWS S3 buckets via cloud.poodll.com.';
+$string['poodll:allowaudio'] = 'Allow audio recording';
+$string['poodll:allowexpiredays'] = 'Allow Expire Days';
+$string['poodll:allowvideo'] = 'Allow video recording';
+$string['poodll:allowhistory'] = 'Allow history tab';
+$string['poodll:allowoptions'] = 'Allow options tab';
+$string['poodll:allowscreen'] = 'Allow screen recording';
+$string['poodll:allowupload'] = 'Allow uploads';
+$string['poodll:allowsubtitling'] = 'Allow subtitling';
+$string['poodll:allowwidgets'] = 'Allow widgets';
+$string['poodll:visible'] = 'Visible';
+
 //--
 $string['cloudpoodll:allowwidgets'] ='Allow visibility of widgets icon';
 $string['cloudpoodll'] = 'Cloud Poodll';
