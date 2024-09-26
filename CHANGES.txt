@@ -1,4 +1,4 @@
-Version 1.0.5 (Build 20240925xx)
+Version 1.0.5 (Build 2025092500)
 - Added Vietnamese and other languages
 
 Version 1.0.4 (Build 2024040500)
