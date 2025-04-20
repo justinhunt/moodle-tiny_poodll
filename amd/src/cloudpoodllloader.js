@@ -1,6 +1,4 @@
-define(['jquery', 'core/log',
-        'https://cdn.jsdelivr.net/gh/justinhunt/cloudpoodll@latest/amd/build/cloudpoodll.min.js',
-        'core/str'],
+define(['jquery', 'core/log', 'tiny_poodll/cloudpoodll', 'core/str'],
     function ($, log, CloudPoodll, str) {
     return {
         init: function (recorderclass, thecallback) {

@@ -1,3 +1,8 @@
+Version 1.0.6 (Build 2025092501)
+- Added capability "use"
+- Tweaks for PHP 8.4
+ - Support for custom Cloud Poodll server
+
 Version 1.0.5 (Build 2025092500)
 - Added Vietnamese and other languages
 

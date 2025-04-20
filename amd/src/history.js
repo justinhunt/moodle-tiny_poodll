@@ -121,94 +121,88 @@ export default class {
     }
 
    registerEvents() {
-       var that = this;
-       Log.debug('events registering');
+        const that = this;
+        Log.debug('events registering');
 
-       //TO DO remove all this jquery from the event code
+        // Handle the removal of an item from the history table
+        document.getElementById('tiny_poodll_history_table').addEventListener('click', function(event) {
+            const target = event.target;
+            if (target.dataset.actionType === 'delete') {
+                Log.debug('delete clicked');
+                const clickedLink = target;
+                ModalFactory.create({
+                    type: ModalFactory.types.SAVE_CANCEL,
+                    title: that.strings.deleteitem,
+                    body: that.strings.confirmdelete,
+                }, clickedLink)
+                    .then(function(modal) {
+                        modal.setSaveButtonText(that.strings.deleteitem);
+                        const root = modal.getRoot();
+                        root.on(ModalEvents.cancel, function() { modal.hide(); });
+                        root.on(ModalEvents.save, function() {
+                            const historyRow = clickedLink.closest('tr').previousElementSibling;
+                            const historyItemId = historyRow.dataset.historyId;
+                            const childHistoryRow = clickedLink.closest('tr');
 
-       //handle the removal of an item from the history table
-       $('#tiny_poodll_history_table').on('click', 'a[data-action-type="delete"]', function() {
-           Log.debug('delete clicked');
-           var clickedLink = $(this);
-           ModalFactory.create({
-               type: ModalFactory.types.SAVE_CANCEL,
-               title: that.strings.deleteitem,
-               body: that.strings.confirmdelete,
-           }, clickedLink    )
-               .then(function(modal) {
-                   modal.setSaveButtonText(that.strings.deleteitem);
-                   var root = modal.getRoot();
-                   root.on(ModalEvents.cancel, function() {modal.hide();});
-                   root.on(ModalEvents.save, function() {
-                       let historyRow = clickedLink.parents('table').parents('tr').first().prev('.history-row');
-                       let historyItemId = historyRow.data('history-id');
-                       let childHistoryRow = clickedLink.parents('table').parents('tr').first();
+                            Ajax.call([{
+                                methodname: 'tiny_poodll_history_archive',
+                                args: { 'id': historyItemId },
+                                done: function() {
+                                    childHistoryRow.style.display = 'none';
+                                    historyRow.style.display = 'none';
+                                }
+                            }]);
+                            modal.hide();
+                        });
+                        modal.show();
+                    });
+            }
+        });
 
-                       Ajax.call([{
-                           methodname: 'tiny_poodll_history_archive',
-                           args: {'id': historyItemId},
-                           done: function () {
-                               childHistoryRow.fadeOut(300, function(){ $(this).remove();});
-                               historyRow.fadeOut(300, function(){ $(this).remove();});
-                           }
-                       }]);
-                       modal.hide();
-                   });
-                   modal.show();
-               });
-       });
+        // Handle the insert of an item from history
+        document.getElementById('tiny_poodll_history_table').addEventListener('click', function(event) {
+            const target = event.target;
+            if (target.dataset.actionType === 'add') {
+                Log.debug('insert clicked');
+                const historyItem = that.fetchHistoryItem(target.dataset.historyId);
+                that.recorder.doInsert(historyItem.mediaurl, historyItem.mediafilename,
+                    historyItem.sourceurl, historyItem.sourcemimetype);
+            }
+        });
 
-       // Handle the insert of an item from history
-       $('#tiny_poodll_history_table').on('click', 'a[data-action-type="add"]', function() {
-           Log.debug('insert clicked');
-           var historyitem = that.fetchHistoryItem($(this).data('history-id'));
-           that.recorder.doInsert(historyitem.mediaurl, historyitem.mediafilename,
-               historyitem.sourceurl, historyitem.sourcemimetype);
-       });
+        // Handle the preview of an item in the history table
+        document.getElementById('tiny_poodll_history_table').addEventListener('click', function(event) {
+            const target = event.target;
+            if (target.dataset.actionType === 'preview') {
+                Log.debug('preview clicked');
+                const clickedLink = target;
+                that.loadHistoryPreview(target.dataset.historyId, clickedLink);
+            }
+        });
 
-       // Handle the preview of an item in the history table
-       $('#tiny_poodll_history_table').on('click', 'a[data-action-type="preview"]', function() {
-           Log.debug('preview clicked');
-           const loadingHtml = '<br /><div class="d-flex justify-content-center">\n' +
-               '  <div class=\"spinner-border\" role="status">\n' +
-               '    <span class=\"sr-only\">' + that.strings.loading + '</span>\n' +
-               '  </div>\n' +
-               '</div><br />';
-
-         //  $('div[data-field="history"]').html(loadingHtml);
-           var clickedLink = $(this);
-           that.loadHistoryPreview($(this).data('history-id'),clickedLink);
-       });
-
-
-       //toggle display of row in the history table
-       //for some reason fails to fire when parent is table even though table is in DOM
-       $('#tiny_poodll_history_table tbody').on('click', 'td.details-control', function () {
-           Log.debug('details control clicked');
-           var tr = $(this).closest('tr');
-           Log.debug(tr);
-           var row = that.table.row(tr);
-           Log.debug(row);
-           if ( row.child.isShown() ) {
-               row.child.hide();
-               tr.removeClass('shown');
-           }
-           else {
-               var rowdata = {"name": "id", "value": tr.data('history-id') };
-               Templates.render('tiny_poodll/historyrow',rowdata).then(
-                   function(html,js){
-                       row.child($(html)).show();
-                       Log.debug('added ' + html);
-                       tr.addClass('shown');
-                   }
-               );
-           }
-       });
-
-
-
-   }
-
+        // Toggle display of row in the history table
+        document.querySelector('#tiny_poodll_history_table tbody').addEventListener('click', function(event) {
+            const target = event.target;
+            if (target.classList.contains('details-control')) {
+                Log.debug('details control clicked');
+                const tr = target.closest('tr');
+                const row = that.table.row(tr);
+                if (row.child.isShown()) {
+                    row.child.hide();
+                    tr.classList.remove('shown');
+                } else {
+                    const rowdata = { "name": "id", "value": tr.dataset.historyId };
+                    Templates.render('tiny_poodll/historyrow', rowdata).then(
+                        function(html, js) {
+                            row.child(html).show();
+                            Log.debug('added ' + html);
+                            tr.classList.add('shown');
+                        }
+                    );
+                }
+            }
+        });
+    }
     loadHistory() {
         var that = this;
         var config = that.recorder.config;

@@ -45,6 +45,7 @@ $string['poodll:allowupload'] = 'Allow uploads';
 $string['poodll:allowsubtitling'] = 'Allow subtitling';
 $string['poodll:allowwidgets'] = 'Allow widgets';
 $string['poodll:visible'] = 'Visible';
+$string['poodll:use'] = 'Use Poodll audio/video/widgets from TinyMCE';
 
 //--
 $string['cloudpoodll:allowwidgets'] ='Allow visibility of widgets icon';
@@ -80,6 +81,8 @@ $string['singapore']='Singapore';
 $string['mumbai']='Mumbai, India';
 $string['capetown'] = 'Capetown, South Africa';
 $string['bahrain'] = 'Bahrain';
+$string['ningxia'] = 'Ningxia, China';
+
 
 $string['language'] = 'Transcription language';
 $string['speakerlanguage'] = 'Speaker language';
@@ -282,4 +285,5 @@ $string['audiorecorder'] = 'Audio Recorder';
 $string['screenrecorder'] = 'Screen Recorder';
 $string['widgetsselector'] = 'Widget Selector';
 $string['widgetsselector_instructions'] = 'Choose a widget to insert into the editor area.';
-
+$string['cloudpoodllserver'] = 'Cloud Poodll Server';
+$string['cloudpoodllserver_details'] = 'The server to use for Cloud Poodll. Only change this if Poodll has provided a different one.';

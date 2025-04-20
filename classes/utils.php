@@ -27,6 +27,16 @@ namespace tiny_poodll;
 defined('MOODLE_INTERNAL') || die;
 
 class utils {
+    // Get the Cloud Poodll Server URL
+    public static function get_cloud_poodll_server() {
+        $conf = get_config(constants::M_COMPONENT);
+        if (isset($conf->cloudpoodllserver) && !empty($conf->cloudpoodllserver)) {
+            return 'https://' . $conf->cloudpoodllserver;
+        } else {
+            return 'https://' . constants::M_DEFAULT_CLOUDPOODLL;
+        }
+    }
+
 
     public static function fetch_options_recorders() {
         $rec_options = array(constants::REC_AUDIO => get_string("recorderaudio", constants::M_COMPONENT),
@@ -64,7 +74,8 @@ class utils {
                 constants::REGION_SINGAPORE => get_string("singapore",constants::M_COMPONENT),
                 constants::REGION_MUMBAI => get_string("mumbai",constants::M_COMPONENT),
                 constants::REGION_CAPETOWN => get_string("capetown",constants::M_COMPONENT),
-                constants::REGION_BAHRAIN => get_string("bahrain",constants::M_COMPONENT)
+                constants::REGION_BAHRAIN => get_string("bahrain",constants::M_COMPONENT),
+                constants::REGION_NINGXIA => get_string("ningxia",constants::M_COMPONENT),
         );
     }
 
@@ -235,8 +246,8 @@ class utils {
         $cache = \cache::make_from_params(\cache_store::MODE_APPLICATION, constants::M_COMPONENT, 'token');
         $tokenobject = $cache->get('recentpoodlltoken');
         $tokenuser = $cache->get('recentpoodlluser');
-        $apiuser = trim($apiuser);
-        $apisecret = trim($apisecret);
+        $apiuser = self::super_trim($apiuser);
+        $apisecret = self::super_trim($apisecret);
 
         //if we got a token and its less than expiry time
         // use the cached one
@@ -247,7 +258,7 @@ class utils {
         }
 
         // Send the request & save response to $resp
-        $token_url = "https://cloud.poodll.com/local/cpapi/poodlltoken.php";
+        $token_url = self::get_cloud_poodll_server() . "/local/cpapi/poodlltoken.php";
         $postdata = array(
                 'username' => $apiuser,
                 'password' => $apisecret,
@@ -296,5 +307,14 @@ class utils {
             $token = '';
         }
         return $token;
+    }
+
+    public static function super_trim($str) {
+        if ($str == null) {
+            return '';
+        } else {
+            $str = trim($str);
+            return $str;
+        }
     }
 }

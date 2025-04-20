@@ -123,6 +123,7 @@ class plugininfo extends plugin implements plugin_with_configuration, plugin_wit
         $cloudpoodll['cp_audioskin'] = $config->audioskin;
         $cloudpoodll['cp_videoskin'] = $config->videoskin;
         $cloudpoodll['cp_fallback'] = $config->fallback;
+        $cloudpoodll['cp_cloudpoodllurl'] = utils::get_cloud_poodll_server();
         $cloudpoodll['cp_owner'] = hash('md5',$USER->username);
 
         //insert method

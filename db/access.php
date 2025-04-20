@@ -137,17 +137,24 @@ $capabilities = array(
             'user' => CAP_ALLOW
         )
     ),
-        'tiny/poodll:allowsubtitling' => array(
-                'captype' => 'write',
-                'contextlevel' => CONTEXT_MODULE,
-                'archetypes' => array(
-                        'coursecreator' => CAP_ALLOW,
-                        'teacher' => CAP_ALLOW,
-                        'editingteacher' => CAP_ALLOW,
-                        'student' => CAP_ALLOW,
-                        'manager' => CAP_ALLOW,
-                        'user' => CAP_ALLOW
-                )
-        )
+    'tiny/poodll:allowsubtitling' => array(
+            'captype' => 'write',
+            'contextlevel' => CONTEXT_MODULE,
+            'archetypes' => array(
+                    'coursecreator' => CAP_ALLOW,
+                    'teacher' => CAP_ALLOW,
+                    'editingteacher' => CAP_ALLOW,
+                    'student' => CAP_ALLOW,
+                    'manager' => CAP_ALLOW,
+                    'user' => CAP_ALLOW
+            )
+    ),
+    'tiny/poodll:use' => [
+        'captype' => 'read',
+        'contextlevel' => CONTEXT_MODULE,
+        'archetypes' => [
+            'user' => CAP_ALLOW,
+        ]
+     ],
 );
 

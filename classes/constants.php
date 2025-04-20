@@ -29,6 +29,7 @@ defined('MOODLE_INTERNAL') || die;
 class constants {
 
     const M_COMPONENT = 'tiny_poodll';
+    const M_DEFAULT_CLOUDPOODLL = "cloud.poodll.com";
     const M_TABLE = 'tiny_poodll_history';
     const M_SUBPLUGIN = 'poodll';
     const M_URL='lib/editor/tiny/plugins/poodll';
@@ -126,7 +127,7 @@ class constants {
     const REGION_MUMBAI = 'mumbai';
     const REGION_CAPETOWN = 'capetown';
     const REGION_BAHRAIN = 'bahrain';
-
+    const REGION_NINGXIA = 'ningxia';
     const FILETITLE_DISPLAYLENGTH = 30;
 
 }

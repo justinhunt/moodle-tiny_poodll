@@ -373,6 +373,7 @@ export default class {
         context.CP.audioskin = config.cp_audioskin;
         context.CP.videoskin = config.cp_videoskin;
         context.CP.fallback = config.fallback;
+        context.CP.cloudpoodllurl = config.cp_cloudpoodllurl;
         context.CP.sizes = this.fetchRecorderDimensions(config);
 
         //get defaults for expire days and subtitle language
