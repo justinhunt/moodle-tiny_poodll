@@ -54,12 +54,16 @@ export default class Video extends BaseClass {
         var tc = super.getModalContext(editor);
         tc.isvideo=true;
         tc.recorder = 'video'; //(audio or video or screen)
-
-        if(tc.subtitlevideobydefault){
+        //subtitles
+        if(tc.subtitlevideobydefault==='1'){
             tc.subtitling=true;
         }else{
             tc.subtitling=false;
         }
+        //insert method
+        tc.mediataginsert = (tc.insertmethod === 'tags');
+
+
         return tc;
     }
 

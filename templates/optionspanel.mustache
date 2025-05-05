@@ -48,8 +48,7 @@
       {{#cansubtitle}}
           <br><label>
               <input type="checkbox" id="{{elementid}}_{{CSS.SUBTITLE_CHECKBOX}}" class="{{CSS.SUBTITLE_CHECKBOX}}"
-              {{#isvideo}}{{#letssubtitlevideo}} checked="true"{{/letssubtitlevideo}}{{/isvideo}}
-              {{^isvideo}}{{#letssubtitleaudio}} checked="true"{{/letssubtitleaudio}}{{/isvideo}}
+              {{#subtitling}} checked="true"{{/subtitling}}
               />
               &nbsp;{{#str}} subtitlecheckbox, tiny_poodll {{/str}}
               </label>

@@ -46,12 +46,15 @@ export default class Audio extends BaseClass {
         var tc = super.getModalContext(editor);
         tc.isaudio=true;
         tc.recorder = 'audio'; //(audio or video or screen)
-
-        if(tc.subtitleaudiobydefault){
+        //subtitles
+        if(tc.subtitleaudiobydefault==='1'){
             tc.subtitling=true;
         }else{
             tc.subtitling=false;
         }
+        //insert method
+        tc.mediataginsert = (tc.insertmethod === 'tags');
+
         return tc;
     }
 

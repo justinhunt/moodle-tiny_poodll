@@ -1,3 +1,6 @@
+Version 1.0.7 (Build 2025092502)
+ - Fixed issue with default checkboxes for subtitling and media tag insert
+
 Version 1.0.6 (Build 2025092501)
 - Added capability "use"
 - Tweaks for PHP 8.4
