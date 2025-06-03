@@ -170,7 +170,8 @@ export default class {
      * @method initHistory
      * @private
      */
-    initHistory() {
+    initHistory(elementid) {
+        Log.debug('initialising history');
         this.history = new History(this);
     }
 
@@ -386,7 +387,7 @@ export default class {
     static async display(editor) {
         const ModalClass = this.getModalClass();
         const templatecontext = this.getModalContext(editor);
-        const elementid = this.generateRandomString();
+        const elementid = 'tph_' + this.generateRandomString();
         templatecontext.elementid = elementid;
 
         const modal = await ModalFactory.create({
