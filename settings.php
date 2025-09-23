@@ -117,6 +117,11 @@ if ($hassiteconfig) {
             get_string('transcode', constants::M_COMPONENT),
             get_string('transcode_details', constants::M_COMPONENT), 1));
 
+        $settings->add(new admin_setting_configcheckbox(constants::M_COMPONENT . '/includesource',
+            get_string('includesource', constants::M_COMPONENT),
+            get_string('includesource_details', constants::M_COMPONENT), 0));
+
+
         $settings->add(new admin_setting_configcheckbox(constants::M_COMPONENT . '/enableaudio',
             get_string('enableaudio', constants::M_COMPONENT), '', 1));
         $settings->add(new admin_setting_configcheckbox(constants::M_COMPONENT . '/enablevideo',

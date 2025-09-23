@@ -1,3 +1,6 @@
+Version 1.0.9 (Build 2025092504)
+- Added the ability to turn on/off unconverted source files in player file sources. Off now by default.
+
 Version 1.0.8 (Build 2025092503)
 - Fixed issues with history tab
 

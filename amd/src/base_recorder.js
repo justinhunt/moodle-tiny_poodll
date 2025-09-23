@@ -248,8 +248,11 @@ export default class {
         context.url = mediaurl;
         context.name = mediafilename;
         context.issubtitling = this.config.subtitling && this.config.subtitling !== '0';
-        context.includesourcetrack = this.config.transcoding && (mediaurl !== sourceurl)
-            && (sourceurl.slice(-3) !== 'wav') && (sourceurl !== false);
+        var includesource = this.config.includesource == "1";
+        context.includesourcetrack = includesource && this.config.transcoding
+            && (mediaurl !== sourceurl)
+            && (sourceurl.slice(-3) !== 'wav')
+            && (sourceurl !== false);
         context.CP = this.config.CP;
         context.subtitleurl = mediaurl + '.vtt';
         context.sourceurl = sourceurl;
@@ -352,6 +355,9 @@ export default class {
 
         //file title display length
         context.filetitledisplaylength = config.filetitle_displaylength;
+
+        //Include source
+        context.includesource = config.includesource == '1';
 
         //show tabs
         context.showhistory = config.showhistory== '1';

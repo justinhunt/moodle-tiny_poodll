@@ -145,6 +145,8 @@ class plugininfo extends plugin implements plugin_with_configuration, plugin_wit
         //expire days
         $cloudpoodll['showexpiredays'] =  $canexpiredays;
 
+        // include source file as well as transcoded file in player sources
+        $cloudpoodll['includesource'] =  $config->includesource;
 
         // If the poodle filter plugin is installed and enabled, add widgets to the toolbar.
         $poodllconfig = get_config('filter_poodll');

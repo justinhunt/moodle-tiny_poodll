@@ -73,7 +73,8 @@ export default class Audio extends BaseClass {
         context.url = mediaurl;
         context.name = mediafilename;
         context.issubtitling = this.config.subtitling && this.config.subtitling !== '0';
-        context.includesourcetrack = this.config.transcoding && (mediaurl !== sourceurl)
+        var includesource = this.config.includesource == "1";
+        context.includesourcetrack = includesource && this.config.transcoding && (mediaurl !== sourceurl)
             && (sourceurl.slice(-3) !== 'wav') && (sourceurl !== false);
         context.CP = this.config.CP;
         context.subtitleurl = mediaurl + '.vtt';

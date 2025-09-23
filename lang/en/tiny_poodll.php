@@ -217,8 +217,12 @@ $string['mediainsertcheckbox'] = 'Insert media player into editor. Otherwise ins
 $string['options'] = 'Options';
 $string['screen'] = 'Screen';
 $string['history'] = 'History';
+
 $string['transcode'] = 'Transcode';
 $string['transcode_details'] = 'CloudPoodll can transcode audio to mp3 and video to mp4';
+
+$string['includesource'] = 'Include source';
+$string['includesource_details'] = 'Add the original source file as well as the transcoded file in the player sources';
 
 $string['cannotsubtitle'] = 'Subtitling is disabled. Check transcode, subtitle and region settings. ';
 
