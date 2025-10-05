@@ -31,7 +31,8 @@ use editor_tiny\plugin_with_buttons;
 use editor_tiny\plugin_with_menuitems;
 use editor_tiny\plugin_with_configuration;
 
-class plugininfo extends plugin implements plugin_with_configuration, plugin_with_buttons, plugin_with_menuitems {
+class plugininfo extends plugin implements plugin_with_configuration, plugin_with_buttons, plugin_with_menuitems
+{
 
     /**
      * Whether the plugin is enabled
@@ -60,13 +61,15 @@ class plugininfo extends plugin implements plugin_with_configuration, plugin_wit
     }
 
 
-    public static function get_available_buttons(): array {
+    public static function get_available_buttons(): array
+    {
         return [
             'tiny_poodll/plugin',
         ];
     }
 
-    public static function get_available_menuitems(): array {
+    public static function get_available_menuitems(): array
+    {
         return [
             'tiny_poodll/plugin',
         ];
@@ -79,40 +82,45 @@ class plugininfo extends plugin implements plugin_with_configuration, plugin_wit
         ?\editor_tiny\editor $editor = null
     ): array {
 
-        global $COURSE,$USER;
+        global $COURSE, $USER;
 
         $config = get_config(constants::M_COMPONENT);
+        $poodllconfig = get_config('filter_poodll');
 
+        // On first there are no templates, just cancel
+        if (!$poodllconfig || count(get_object_vars($poodllconfig)) < 2) {
+            return [];
+        }
 
         if (!$context) {
             $context = \context_course::instance($COURSE->id);
         }
         $disabled = false;
 
-        //If they don't have permission don't show it
+        // If they don't have permission don't show it.
         if (!has_capability('tiny/poodll:visible', $context)) {
             $disabled = true;
         }
 
-        //subitling ok
+        // Subitling ok.
         $cansubtitle = utils::can_transcribe($config) &&
             $config->enablesubtitling &&
             has_capability('tiny/poodll:allowsubtitling', $context);
 
-        //expire days
+        // Expire days.
         $canexpiredays = has_capability('tiny/poodll:allowexpiredays', $context);
 
-        //upload
-        $canupload =  $config->showupload && has_capability('tiny/poodll:allowupload', $context);
+        // Upload.
+        $canupload = $config->showupload && has_capability('tiny/poodll:allowupload', $context);
 
-        //history
+        // History.
         $canhistory = $config->showhistory && has_capability('tiny/poodll:allowhistory', $context);
 
-        //options
+        // Options.
         $canoptions = $config->showoptions && has_capability('tiny/poodll:allowoptions', $context);
 
-        //cloudpoodll params
-        $cloudpoodll =[];
+        // Cloudpoodll params.
+        $cloudpoodll = [];
         $cloudpoodll['cp_expiredays'] = $config->expiredays;
         $cloudpoodll['cp_cansubtitle'] = $cansubtitle;
         $cloudpoodll['cp_token'] = utils::fetch_token($config->apiuser, $config->apisecret);
@@ -124,29 +132,29 @@ class plugininfo extends plugin implements plugin_with_configuration, plugin_wit
         $cloudpoodll['cp_videoskin'] = $config->videoskin;
         $cloudpoodll['cp_fallback'] = $config->fallback;
         $cloudpoodll['cp_cloudpoodllurl'] = utils::get_cloud_poodll_server();
-        $cloudpoodll['cp_owner'] = hash('md5',$USER->username);
+        $cloudpoodll['cp_owner'] = hash('md5', $USER->username);
 
-        //insert method
+        // Insert method.
         $cloudpoodll['insertmethod'] = $config->insertmethod;
         $cloudpoodll['subtitleaudiobydefault'] = $config->subtitleaudiobydefault;
         $cloudpoodll['subtitlevideobydefault'] = $config->subtitlevideobydefault;
 
-        //add our disabled param
+        // Add our disabled param.
         $cloudpoodll['disabled'] = $disabled;
 
         $cloudpoodll['filetitle_displaylength'] = constants::FILETITLE_DISPLAYLENGTH;
 
-        //showhistory or not
-        $cloudpoodll['showhistory'] =  $canhistory;
-        //showoptions or not
-        $cloudpoodll['showoptions'] =  $canoptions;
-        //showupload or not
-        $cloudpoodll['showupload'] =  $canupload;
-        //expire days
-        $cloudpoodll['showexpiredays'] =  $canexpiredays;
+        // Showhistory or not.
+        $cloudpoodll['showhistory'] = $canhistory;
+        // Showoptions or not.
+        $cloudpoodll['showoptions'] = $canoptions;
+        // Showupload or not.
+        $cloudpoodll['showupload'] = $canupload;
+        // Expire days.
+        $cloudpoodll['showexpiredays'] = $canexpiredays;
 
-        // include source file as well as transcoded file in player sources
-        $cloudpoodll['includesource'] =  $config->includesource;
+        // Include source file as well as transcoded file in player sources.
+        $cloudpoodll['includesource'] = $config->includesource;
 
         // If the poodle filter plugin is installed and enabled, add widgets to the toolbar.
         $poodllconfig = get_config('filter_poodll');
@@ -158,20 +166,20 @@ class plugininfo extends plugin implements plugin_with_configuration, plugin_wit
 
         $params['cloudpoodll'] = $cloudpoodll;
 
-        //add icons to editor if the permissions and settings are all ok
-        $recorders = array('audio', 'video','screen','widgets');
+        // Add icons to editor if the permissions and settings are all ok.
+        $recorders = ['audio', 'video', 'screen', 'widgets'];
 
 
 
         foreach ($recorders as $recorder) {
             $enablemedia = get_config(constants::M_COMPONENT, 'enable' . $recorder);
             if ($enablemedia && has_capability('tiny/poodll:allow' . $recorder, $context)) {
-                $params[$recorder .'allowed'] = true;
-            }else{
-                $params[$recorder .'allowed'] = false;
+                $params[$recorder . 'allowed'] = true;
+            } else {
+                $params[$recorder . 'allowed'] = false;
             }
         }
-        return  $params;
+        return $params;
     }
 
     /**
@@ -179,36 +187,38 @@ class plugininfo extends plugin implements plugin_with_configuration, plugin_wit
      *
      * @return array of additional params to pass to javascript init function for this module.
      */
-    private static function get_widgets_for_js() {
+    private static function get_widgets_for_js()
+    {
         global $USER, $COURSE;
 
-        //init our return value
-        $widgets=[];
+        // Init our return value.
+        $widgets = [];
         //generico specific
         $templates = get_object_vars(get_config('filter_poodll'));
 
-        //get the no. of templates
+        // Get the no. of templates.
         if (!array_key_exists('templatecount', $templates)) {
             $templatecount = \filter_poodll\filtertools::FILTER_POODLL_TEMPLATE_COUNT + 1;
         } else {
             $templatecount = $templates['templatecount'] + 1;
         }
-        //put our template into a form thats easy to process in JS
+        // Put our template into a form thats easy to process in JS.
         for ($tempindex = 1; $tempindex < $templatecount; $tempindex++) {
-            if (empty($templates['template_' . $tempindex]) &&
+            if (
+                empty($templates['template_' . $tempindex]) &&
                 empty($templates['templatescript_' . $tempindex]) &&
                 empty($templates['templatestyle_' . $tempindex])
             ) {
                 continue;
             }
 
-            //make sure its to be shown in TinyMCE (we use the old atto setting, so we can be backwards compat.)
+            // Make sure its to be shown in TinyMCE (we use the old atto setting, so we can be backwards compat.)
             if (!$templates['template_showatto_' . $tempindex]) {
                 continue;
             }
             $widget = new \stdClass();
 
-            //stash the key and name for this template
+            // Stash the key and name for this template.
             $widget->key = $templates['templatekey_' . $tempindex];
             $usename = trim($templates['templatename_' . $tempindex]);
             if ($usename == '') {
@@ -217,26 +227,30 @@ class plugininfo extends plugin implements plugin_with_configuration, plugin_wit
                 $widget->name = $usename;
             }
 
-            //instructions
-            $widget->instructions =$templates['templateinstructions_' . $tempindex];// rawurlencode($templates['templateinstructions_' . $tempindex]);
+            // Instructions.
+            $widget->instructions = $templates['templateinstructions_' . $tempindex];
 
-            //stash the defaults for this template
+            // Stash the defaults for this template.
             $widgetdefaults = self::fetch_widget_properties($templates['templatedefaults_' . $tempindex]);
 
-            //NB each of the $allvariables contains an array of variables (not a string)
-            //there might be duplicates where the variable is used multiple times in a template
-            //se we uniqu'ify it. That makes it look complicated. But we are just removing doubles
-            $allvariables = self::fetch_widget_variables($templates['template_' . $tempindex] .
-                $templates['templatescript_' . $tempindex] . $templates['datasetvars_' . $tempindex]);
+            // NB each of the $allvariables contains an array of variables (not a string).
+            // There might be duplicates where the variable is used multiple times in a template.
+            // So we uniqu'ify it. That makes it look complicated. But we are just removing doubles.
+            $templatetext = '';
+            $templatetext .= isset($templates['template_' . $tempindex]) ? $templates['template_' . $tempindex] : '';
+            $templatetext .= isset($templates['templatescript_' . $tempindex]) ? $templates['template_' . $tempindex] : '';
+            $templatetext .= isset($templates['datasetvars_' . $tempindex]) ? $templates['template_' . $tempindex] : '';
+            $allvariables = self::fetch_widget_variables($templatetext);
             $uniquevariables = array_unique($allvariables);
-            $usevariables = array();
+            $usevariables = [];
 
-            //we need to reallocate array keys if the array size was changed in unique'ifying it
-            //we also take the opportunity to remove user variables, since they aren't needed here.
-            //NB DATASET can be referred to without the :
+            // We need to reallocate array keys if the array size was changed in unique'ifying it.
+            // We also take the opportunity to remove user variables, since they aren't needed here.
+            // NB DATASET can be referred to without the :
             while (count($uniquevariables) > 0) {
                 $tempvar = array_shift($uniquevariables);
-                if (strpos($tempvar, 'COURSE:') === false
+                if (
+                    strpos($tempvar, 'COURSE:') === false
                     && strpos($tempvar, 'USER:') === false
                     && strpos($tempvar, 'DATASET:') === false
                     && strpos($tempvar, 'URLPARAM:') === false
@@ -244,30 +258,31 @@ class plugininfo extends plugin implements plugin_with_configuration, plugin_wit
                     && $tempvar != 'MOODLEPAGEID'
                     && $tempvar != 'WWWROOT'
                     && $tempvar != 'AUTOID'
-                    && $tempvar != 'CLOUDPOODLLTOKEN') {
+                    && $tempvar != 'CLOUDPOODLLTOKEN'
+                ) {
                     $usevariables[] = $tempvar;
                 }
             }
-            $widget->variables =[];
-            foreach($usevariables as $var){
+            $widget->variables = [];
+            foreach ($usevariables as $var) {
                 $default = isset($widgetdefaults[$var]) ? $widgetdefaults[$var] : '';
-                $isarray=false;
-                if(strpos($default,'|')) {
+                $isarray = false;
+                if (strpos($default, '|')) {
                     $default = explode('|', $default);
-                    $isarray=true;
+                    $isarray = true;
                 }
-                $display_name = str_replace('_',' ',$var);
-                $display_name = str_replace('-',' ',$display_name);
-                $display_name =ucwords($display_name);
-                $widget->variables[] = ['key'=>$var,'default'=>$default, 'isarray'=>$isarray, 'displayname'=>$display_name];
+                $display_name = str_replace('_', ' ', $var);
+                $display_name = str_replace('-', ' ', $display_name);
+                $display_name = ucwords($display_name);
+                $widget->variables[] = ['key' => $var, 'default' => $default, 'isarray' => $isarray, 'displayname' => $display_name];
             }
 
-            //set the template index so we can find it easily later.
+            // Set the template index so we can find it easily later.
             $widget->templateindex = $tempindex;
 
 
             $widget->end = !empty($templates['templateend_' . $tempindex]) ? $templates['templateend_' . $tempindex] : false;
-            $widgets[]=$widget;
+            $widgets[] = $widget;
         }
 
         return $widgets;
@@ -278,34 +293,35 @@ class plugininfo extends plugin implements plugin_with_configuration, plugin_wit
      * @param string template containing @@variable@@ variables
      * @return array of variable names parsed from template string
      */
-    private static function fetch_widget_variables($template) {
-        $matches = array();
+    private static function fetch_widget_variables($template)
+    {
+        $matches = [];
         $t = preg_match_all('/@@(.*?)@@/s', $template, $matches);
         if (count($matches) > 1) {
             return ($matches[1]);
         } else {
-            return array();
+            return [];
         }
     }
 
-   private static function fetch_widget_properties($propstring) {
-        //Now we just have our properties string
-        //Lets run our regular expression over them
-        //string should be property=value,property=value
-        //got this regexp from http://stackoverflow.com/questions/168171/regular-expression-for-parsing-name-value-pairs
+    private static function fetch_widget_properties($propstring)
+    {
+        // Now we just have our properties string.
+        // Lets run our regular expression over them.
+        // String should be property=value,property=value.
+        // Got this regexp from http://stackoverflow.com/questions/168171/regular-expression-for-parsing-name-value-pairs.
         $regexpression = '/([^=,]*)=("[^"]*"|[^,"]*)/';
-        $matches = array();
+        $matches = [];
 
-        //here we match the filter string and split into name array (matches[1]) and value array (matches[2])
-        //we then add those to a name value array.
-        $itemprops = array();
+        // Here we match the filter string and split into name array (matches[1]) and value array (matches[2]).
+        // We then add those to a name value array.
+        $itemprops = [];
         if (preg_match_all($regexpression, $propstring, $matches, PREG_PATTERN_ORDER)) {
             $propscount = count($matches[1]);
             for ($cnt = 0; $cnt < $propscount; $cnt++) {
-                // echo $matches[1][$cnt] . "=" . $matches[2][$cnt] . " ";
                 $newvalue = $matches[2][$cnt];
-                //this could be done better, I am sure. WE are removing the quotes from start and end
-                //this wil however remove multiple quotes id they exist at start and end. NG really
+                // This could be done better, I am sure. WE are removing the quotes from start and end.
+                // This wil however remove multiple quotes id they exist at start and end. NG really.
                 $newvalue = trim($newvalue, '"');
                 $itemprops[trim($matches[1][$cnt])] = $newvalue;
             }
