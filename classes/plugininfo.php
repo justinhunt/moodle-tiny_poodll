@@ -85,12 +85,6 @@ class plugininfo extends plugin implements plugin_with_configuration, plugin_wit
         global $COURSE, $USER;
 
         $config = get_config(constants::M_COMPONENT);
-        $poodllconfig = get_config('filter_poodll');
-
-        // On first there are no templates, just cancel
-        if (!$poodllconfig || count(get_object_vars($poodllconfig)) < 2) {
-            return [];
-        }
 
         if (!$context) {
             $context = \context_course::instance($COURSE->id);
