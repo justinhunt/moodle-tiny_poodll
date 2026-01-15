@@ -1,3 +1,6 @@
+Version 1.0.12 (Build 2026011500)
+- Fix for some variable input fields not showing in popup
+
 Version 1.0.11 (Build 2025120500)
 - Fix for situations where Poodll filter was not installed and TinyPoodll did not show
 

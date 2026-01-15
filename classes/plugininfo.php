@@ -232,8 +232,8 @@ class plugininfo extends plugin implements plugin_with_configuration, plugin_wit
             // So we uniqu'ify it. That makes it look complicated. But we are just removing doubles.
             $templatetext = '';
             $templatetext .= isset($templates['template_' . $tempindex]) ? $templates['template_' . $tempindex] : '';
-            $templatetext .= isset($templates['templatescript_' . $tempindex]) ? $templates['template_' . $tempindex] : '';
-            $templatetext .= isset($templates['datasetvars_' . $tempindex]) ? $templates['template_' . $tempindex] : '';
+            $templatetext .= isset($templates['templatescript_' . $tempindex]) ? $templates['templatescript_' . $tempindex] : '';
+            $templatetext .= isset($templates['datasetvars_' . $tempindex]) ? $templates['datasetvars_' . $tempindex] : '';
             $allvariables = self::fetch_widget_variables($templatetext);
             $uniquevariables = array_unique($allvariables);
             $usevariables = [];
