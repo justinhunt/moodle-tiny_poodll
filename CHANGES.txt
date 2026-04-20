@@ -1,3 +1,7 @@
+Version 1.0.13 (Build 2026042000)
+- Removed modal_factory and modal_registry calls
+- Updated to require Moodle 4.3
+
 Version 1.0.12 (Build 2026011500)
 - Fix for some variable input fields not showing in popup
 

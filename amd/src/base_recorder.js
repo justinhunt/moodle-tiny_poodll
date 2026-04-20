@@ -24,11 +24,11 @@
 
 import Log from 'core/log';
 import {getConfig} from './options';
-import * as ModalFactory from 'core/modal_factory';
+
 import * as Templates from 'core/templates';
 import {prefetchStrings, prefetchTemplates} from 'core/prefetch';
 import Modal from "./modal";
-import ModalRegistry from 'core/modal_registry';
+
 import History from 'tiny_poodll/history';
 
 import {
@@ -320,19 +320,10 @@ export default class {
     }
 
     static getModalClass() {
-        const modalType = `${component}/media_recorder`;
-        const registration = ModalRegistry.get(modalType);
-        if (registration) {
-            return registration.module;
-        }
-
-        const MediaModal = class extends Modal {
-            static TYPE = modalType;
+        return class extends Modal {
+            static TYPE = `${component}/media_recorder`;
             static TEMPLATE = `${component}/recorders`;
         };
-
-        ModalRegistry.register(MediaModal.TYPE, MediaModal, MediaModal.TEMPLATE);
-        return MediaModal;
     }
 
     static getModalContext(editor) {
@@ -396,8 +387,7 @@ export default class {
         const elementid = 'tph_' + this.generateRandomString();
         templatecontext.elementid = elementid;
 
-        const modal = await ModalFactory.create({
-            type: ModalClass.TYPE,
+        const modal = await ModalClass.create({
             templateContext: templatecontext,
             large: true,
         });

@@ -26,6 +26,6 @@ defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'tiny_poodll';
 $plugin->maturity = MATURITY_STABLE;
-$plugin->release = '1.0.12 (Build 2026011500)';
-$plugin->requires = 2022112800; // Moodle 4.1.0.
-$plugin->version = 2026011500;
+$plugin->release = '1.0.13 (Build 2026042000)';
+$plugin->requires = 2023100900; // Moodle 4.3.0
+$plugin->version = 2026042000;

@@ -27,7 +27,7 @@ import {component, CSS, INSERTMETHOD, SKIN} from "./common";
 import * as Templates from 'core/templates';
 import * as Notification from 'core/notification';
 import ModalSaveCancel from 'core/modal_save_cancel';
-import * as ModalFactory from 'core/modal_factory';
+
 import * as ModalEvents from 'core/modal_events';
 import Log from 'core/log';
 import {get_strings as getStrings} from "core/str";
@@ -221,44 +221,43 @@ export default class {
      * @param  {integer} historyid The id of the history item
      * @param  {object} clickedLink The link that was clicked
      */
-    loadHistoryDelete(historyid, clickedLink) {
+    async loadHistoryDelete(historyid, clickedLink) {
         var that = this;
 
-        const modal = ModalSaveCancel.create({
+        const modal = await ModalSaveCancel.create({
             title: that.strings.deleteitem,
             body: that.strings.confirmdelete,
-            show: true,
             buttons: {save: that.strings.deleteitem},
             removeOnClose: true,
-        }).then(function (modal) {
-            const root = modal.getRoot();
-            root.on(ModalEvents.cancel, function () {
-                modal.hide();
-            });
-            root.on(ModalEvents.save, function () {
-                const historyItemId = clickedLink.dataset.historyid;
-                const therow = document.querySelector('tr[data-historyid="' + historyItemId + '"]');
-                var dtparentrow = that.table.row(therow);
-
-                if (!dtparentrow.node()) {
-                    Log.debug('Row is not part of the DataTables instance.');
-                    dtparentrow = that.table.row('tr[data-historyid="' + historyItemId + '"]');
-                    if (!dtparentrow.node()) {
-                        Log.debug('Row is still not part of the DataTables instance.');
-                        return;
-                    }
-                }
-
-                Ajax.call([{
-                    methodname: 'tiny_poodll_history_archive',
-                    args: {'id': historyItemId},
-                    done: function () {
-                        // Remove the parent row from the DataTable and redraw
-                        dtparentrow.remove().draw();
-                    }
-                }]);
-            });
         });
+        const root = modal.getRoot();
+        root.on(ModalEvents.cancel, function() {
+            modal.hide();
+        });
+        root.on(ModalEvents.save, function() {
+            const historyItemId = clickedLink.dataset.historyid;
+            const therow = document.querySelector('tr[data-historyid="' + historyItemId + '"]');
+            var dtparentrow = that.table.row(therow);
+
+            if (!dtparentrow.node()) {
+                Log.debug('Row is not part of the DataTables instance.');
+                dtparentrow = that.table.row('tr[data-historyid="' + historyItemId + '"]');
+                if (!dtparentrow.node()) {
+                    Log.debug('Row is still not part of the DataTables instance.');
+                    return;
+                }
+            }
+
+            Ajax.call([{
+                methodname: 'tiny_poodll_history_archive',
+                args: {'id': historyItemId},
+                done: function() {
+                    // Remove the parent row from the DataTable and redraw
+                    dtparentrow.remove().draw();
+                }
+            }]);
+        });
+        modal.show();
     }
 
     /**
@@ -277,32 +276,30 @@ export default class {
             isVideo: that.recorder.config.recorder === 'video' || that.recorder.config.recorder === 'screen'
         };
         Templates.render('tiny_poodll/historypreview', context)
-            .then(function (html, js) {
+            .then(async function(html, js) {
 
-                const modal = ModalSaveCancel.create({
+                const modal = await ModalSaveCancel.create({
                     title: that.strings.previewitem,
                     body: html,
-                    show: true,
                     buttons: {save: that.strings.insertitem},
                     removeOnClose: true,
-                }).then(function (modal) {
-                    const root = modal.getRoot();
-                    root.on(ModalEvents.cancel, function () {
-                        modal.hide();
-                    });
-                    root.on(ModalEvents.save, function () {
-                        that.recorder.doInsert(
-                            historyItem.mediaurl,
-                            historyItem.mediafilename,
-                            historyItem.sourceurl,
-                            historyItem.sourcemimetype
-                        );
-                    });
-
                 });
-            }).fail(function (ex) {
-            Notification.exception(ex);
-        });
+                const root = modal.getRoot();
+                root.on(ModalEvents.cancel, function() {
+                    modal.hide();
+                });
+                root.on(ModalEvents.save, function() {
+                    that.recorder.doInsert(
+                        historyItem.mediaurl,
+                        historyItem.mediafilename,
+                        historyItem.sourceurl,
+                        historyItem.sourcemimetype
+                    );
+                });
+                modal.show();
+            }).fail(function(ex) {
+                Notification.exception(ex);
+            });
     }
 
 
