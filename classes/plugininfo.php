@@ -85,12 +85,6 @@ class plugininfo extends plugin implements plugin_with_configuration, plugin_wit
         global $COURSE, $USER;
 
         $config = get_config(constants::M_COMPONENT);
-        $poodllconfig = get_config('filter_poodll');
-
-        // On first there are no templates, just cancel
-        if (!$poodllconfig || count(get_object_vars($poodllconfig)) < 2) {
-            return [];
-        }
 
         if (!$context) {
             $context = \context_course::instance($COURSE->id);
@@ -238,8 +232,8 @@ class plugininfo extends plugin implements plugin_with_configuration, plugin_wit
             // So we uniqu'ify it. That makes it look complicated. But we are just removing doubles.
             $templatetext = '';
             $templatetext .= isset($templates['template_' . $tempindex]) ? $templates['template_' . $tempindex] : '';
-            $templatetext .= isset($templates['templatescript_' . $tempindex]) ? $templates['template_' . $tempindex] : '';
-            $templatetext .= isset($templates['datasetvars_' . $tempindex]) ? $templates['template_' . $tempindex] : '';
+            $templatetext .= isset($templates['templatescript_' . $tempindex]) ? $templates['templatescript_' . $tempindex] : '';
+            $templatetext .= isset($templates['datasetvars_' . $tempindex]) ? $templates['datasetvars_' . $tempindex] : '';
             $allvariables = self::fetch_widget_variables($templatetext);
             $uniquevariables = array_unique($allvariables);
             $usevariables = [];
