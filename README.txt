@@ -4,8 +4,16 @@ Tiny Poodll for Moodle TinyMCE >= 4.1
 OVERVIEW
 ===============================================
 
-This adds editor icons for audio/video/screen recording and poodll filter widgets to the TinyMCE HTML editor in Moodle.
+Tiny Poodll is an advanced audio, video and screen recording toolset for Moodle's TinyMCE editor.
+It adds recording tools to the TinyMCE toolbar (audio, video, screen, and a widgets picker), so
+recordings can be made directly in any Moodle HTML area instead of typing. Recordings are
+converted to MP3/MP4 and stored in the Poodll cloud.
 
+Tiny Poodll requires a Cloud Poodll API username and secret from https://poodll.com
+See here: https://support.poodll.com/support/solutions/articles/19000083076-cloud-poodll-api-secret
+
+See README.md in this folder for the full documentation: features, installation, site settings,
+and the recording dialog's tabs.
 
 ===============================================
 LICENSE
@@ -107,4 +115,4 @@ You can get these by subscribing to Poodll at https://poodll.com (a free trial i
 =================================================
 Getting Help
 =================================================
- If you need help send email to : support@poodll.freshdesk.com
+ If you need help visit https://support.poodll.com or email poodllsupport@gmail.com
