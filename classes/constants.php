@@ -32,7 +32,13 @@ class constants {
     const M_DEFAULT_CLOUDPOODLL = "cloud.poodll.com";
     const M_TABLE = 'tiny_poodll_history';
     const M_SUBPLUGIN = 'poodll';
-    const M_URL='lib/editor/tiny/plugins/poodll';
+    // Leading slash so this can be appended to $CFG->wwwroot like every other Poodll plugin.
+    const M_URL='/lib/editor/tiny/plugins/poodll';
+    const M_PLUGINSETTINGS = '/admin/settings.php?section=tiny_poodll_settings';
+
+    // Chargebee details for the in-app free trial (see fetchcbpage.php).
+    const M_CB_SITE = 'poodllcom';
+    const M_CB_TRIAL_PRICEID = 'Poodll-Free-Trial-USD-Daily';
 
     const APPID = 'tiny_poodll';
 

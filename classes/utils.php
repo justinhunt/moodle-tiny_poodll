@@ -240,6 +240,49 @@ class utils {
 
     }
 
+    /**
+     * Report what is wrong with a Poodll token, if anything.
+     *
+     * @param string|bool $token the token returned by fetch_token()
+     * @return string the problem, or an empty string when the token is good
+     */
+    public static function fetch_token_error($token) {
+        global $CFG;
+
+        // Check the token authenticated at all.
+        if (empty($token)) {
+            return get_string('novalidcredentials', constants::M_COMPONENT,
+                    $CFG->wwwroot . constants::M_PLUGINSETTINGS);
+        }
+
+        // Fetch the token details from the cache and check them over.
+        $cache = \cache::make_from_params(\cache_store::MODE_APPLICATION, constants::M_COMPONENT, 'token');
+        $tokenobject = $cache->get('recentpoodlltoken');
+
+        // We should not get here if there is no token, but lets gracefully die. [v unlikely]
+        if (!($tokenobject)) {
+            return get_string('notokenincache', constants::M_COMPONENT);
+        }
+
+        // We have an object but its no good, creds were wrong ..or something. [v unlikely]
+        if (!property_exists($tokenobject, 'token') || empty($tokenobject->token)) {
+            return get_string('credentialsinvalid', constants::M_COMPONENT);
+        }
+
+        // If we do not have subs.
+        if (!property_exists($tokenobject, 'subs') || empty($tokenobject->subs)) {
+            return get_string('nosubscriptions', constants::M_COMPONENT);
+        }
+
+        // Is app authorised? fetch_token() defaults apps to false, so check for that before in_array.
+        if (empty($tokenobject->apps) || !in_array(constants::M_COMPONENT, $tokenobject->apps)) {
+            return get_string('appnotauthorised', constants::M_COMPONENT);
+        }
+
+        // Just return empty if there is no error.
+        return '';
+    }
+
     //We need a Poodll token to make this happen
     public static function fetch_token($apiuser, $apisecret, $force = false) {
 

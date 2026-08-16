@@ -37,5 +37,24 @@ use renderable;
  */
 class renderer extends plugin_renderer_base {
 
-
+    /**
+     * Return HTML to let an administrator sort out the Poodll API credentials without leaving the page.
+     *
+     * @param \moodle_url|string $returnurl where to send the administrator after saving
+     * @param string $errormessage what is currently wrong with the credentials, if anything
+     * @return string HTML
+     */
+    public function show_cbcredentials_setup($returnurl, $errormessage = '') {
+        if (\tiny_poodll\cbcredentials::can_manage()) {
+            return $this->render_from_template(
+                \tiny_poodll\constants::M_COMPONENT . '/cbcredentialspanel',
+                \tiny_poodll\cbcredentials::export_panel_data($returnurl, $errormessage)
+            );
+        }
+        // Users who cannot fix it get no technical detail, just who to ask.
+        $output = $this->output->box_start(\tiny_poodll\constants::M_COMPONENT . '_problembox');
+        $output .= $this->notification(get_string('cbaskadmin', \tiny_poodll\constants::M_COMPONENT), 'warning');
+        $output .= $this->output->box_end();
+        return $output;
+    }
 }

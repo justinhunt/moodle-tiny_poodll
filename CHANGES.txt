@@ -1,3 +1,6 @@
+Version 1.0.14 (Build 2026081600)
+- Added in-plugin free trial set up
+
 Version 1.0.13 (Build 2026042000)
 - Removed modal_factory and modal_registry calls
 - Updated to require Moodle 4.3
