@@ -1,0 +1,24 @@
+# camp listing manifest — the descriptive content for this plugin's page on
+# camp-registry.org. Edit and commit as normal; camp ingests and hash-pins it
+# at each tagged release. Schema: https://camp-registry.org/schema/listing.schema.json
+name: Tiny Poodll
+summary: Audio, video and screen recording tools for the TinyMCE editor in Moodle.
+description: |
+  Tiny Poodll adds recording and media tools to the TinyMCE toolbar, so anywhere Moodle shows a
+  rich text editor (forum posts, assignment feedback, course content and more) a teacher or
+  student can record straight into the content instead of typing.
+
+  Recordings are converted to widely playable MP3 and MP4 files and stored in the Cloud Poodll
+  cloud, so course backups stay small and playback works everywhere.
+
+  **Requires a Cloud Poodll account.** Recording, conversion and storage run through the Cloud
+  Poodll service, so the plugin needs an API user and secret from https://poodll.com to function.
+labels:
+  - paid-service
+  - external-account
+  - commercial-support-available
+category: editor
+links:
+  docs: https://support.poodll.com
+  issues: https://github.com/justinhunt/moodle-tiny_poodll/issues
+  changelog: https://github.com/justinhunt/moodle-tiny_poodll/blob/master/CHANGES.txt
