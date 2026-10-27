@@ -26,7 +26,7 @@ defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'tiny_poodll';
 $plugin->maturity = MATURITY_STABLE;
-$plugin->release = '1.0.15 (Build 2026101800)';
+$plugin->release = '1.0.16 (Build 2026102700)';
 $plugin->requires = 2023100900; // Moodle 4.3.0
-$plugin->supported = [403, 502]; // Moodle 4.3 to 5.2.
-$plugin->version = 2026101800;
+$plugin->supported = [403, 503]; // Moodle 4.3 to 5.3.
+$plugin->version = 2026102700;
