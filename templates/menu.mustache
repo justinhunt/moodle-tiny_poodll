@@ -20,7 +20,7 @@
                 </a>
         </li>
     {{/isaudio}}
-    {{^isscreen}}
+    {{^isscreen}}{{^islocal}}
         {{#showupload}}
             <li data-medium-type="{{CSS.UPLOAD}}" class="nav-item">
                 <a class="nav-link" href="#{{elementid}}_{{CSS.UPLOAD}}" role="tab" data-bs-toggle="tab" data-toggle="tab">
@@ -28,7 +28,7 @@
                     </a>
             </li>
         {{/showupload}}
-    {{/isscreen}}
+    {{/islocal}}{{/isscreen}}
     {{#showoptions}}
         <li data-medium-type="{{CSS.OPTIONS}}" class="nav-item">
             <a class="nav-link" href="#{{elementid}}_{{CSS.OPTIONS}}" role="tab" data-bs-toggle="tab" data-toggle="tab">

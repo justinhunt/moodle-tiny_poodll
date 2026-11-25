@@ -51,6 +51,9 @@ class constants {
     const SKIN_FRESH = 'fresh';
     const SKIN_ONCE = 'once';
     const SKIN_SCREEN = 'screen';
+    /** The local recorders, which run in Moodle instead of an iframe from Cloud Poodll. */
+    const SKIN_LOCAL123 = 'local123';
+    const SKIN_LOCALONCE = 'localonce';
 
     const LANG_ENUS = 'en-US';
     const LANG_ENGB = 'en-GB';

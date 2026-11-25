@@ -77,7 +77,9 @@ export default {
         ONETWOTHREE: 'onetwothree',
         FRESH: 'fresh',
         ONCE: 'once',
-        SCREEN: 'screen'
+        SCREEN: 'screen',
+        LOCAL123: 'local123',
+        LOCALONCE: 'localonce'
     },
     CSS: {
         VIDEO: `${component}_video`,

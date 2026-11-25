@@ -54,6 +54,8 @@ export default class Video extends BaseClass {
         var tc = super.getModalContext(editor);
         tc.isvideo=true;
         tc.recorder = 'video'; //(audio or video or screen)
+        tc.localskin = BaseClass.localSkin(tc.CP.videoskin);
+        tc.islocal = !!tc.localskin;
         //subtitles
         if(tc.subtitlevideobydefault==='1'){
             tc.subtitling=true;

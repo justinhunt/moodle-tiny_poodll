@@ -46,6 +46,13 @@ $functions = array(
         'type' => 'read',
         'ajax' => true,
     ),
+    'tiny_poodll_fetch_upload_details' => array(
+        'classname' => 'tiny_poodll\\external\\fetch_upload_details',
+        'methodname' => 'execute',
+        'description' => 'Gets the upload details for one recording from the new recorders.',
+        'type' => 'write',
+        'ajax' => true,
+    ),
     'tiny_poodll_history_get_items' => array(
         'classname' => 'tiny_poodll_history_external',
         'methodname' => 'get_history_items',

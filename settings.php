@@ -126,18 +126,23 @@ if ($hassiteconfig) {
             1));
 
 
+        // The local recorders replace the Cloud Poodll iframe recorders. This goes back to the old ones.
+        $settings->add(new admin_setting_configcheckbox(constants::M_COMPONENT . '/uselegacyrecorders',
+            get_string('uselegacyrecorders', constants::M_COMPONENT),
+            get_string('uselegacyrecorders_details', constants::M_COMPONENT), 0));
+
         $skinoptions = utils::fetch_options_skins();
         unset($skinoptions[constants::SKIN_ONCE]);
         $settings->add(new admin_setting_configselect(constants::M_COMPONENT . '/audioskin',
             get_string('audioskin', constants::M_COMPONENT),
-            '', constants::SKIN_FRESH, $skinoptions));
+            '', utils::effective_skin(constants::SKIN_FRESH), $skinoptions));
 
         $skinoptions = utils::fetch_options_skins();
         unset($skinoptions[constants::SKIN_FRESH]);
         unset($skinoptions[constants::SKIN_ONCE]);
         $settings->add(new admin_setting_configselect(constants::M_COMPONENT . '/videoskin',
             get_string('videoskin', constants::M_COMPONENT),
-            '', constants::SKIN_123, $skinoptions));
+            '', utils::effective_skin(constants::SKIN_123), $skinoptions));
 
         //Default html5 fallback
         $fallback_options = utils::fetch_options_fallback();

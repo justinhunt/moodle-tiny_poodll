@@ -52,6 +52,12 @@ class utils {
     }
 
     public static function fetch_options_skins() {
+        if (!self::use_legacy_recorders()) {
+            return [
+                constants::SKIN_LOCAL123 => get_string('skinlocal123', constants::M_COMPONENT),
+                constants::SKIN_LOCALONCE => get_string('skinlocalonce', constants::M_COMPONENT),
+            ];
+        }
         $rec_options = array(constants::SKIN_PLAIN => get_string("skinplain", constants::M_COMPONENT),
                 constants::SKIN_BMR => get_string("skinbmr", constants::M_COMPONENT),
                 constants::SKIN_123 => get_string("skin123", constants::M_COMPONENT),
@@ -59,6 +65,52 @@ class utils {
                 constants::SKIN_ONCE => get_string("skinonce", constants::M_COMPONENT),
                 constants::SKIN_SCREEN => get_string("skinscreen", constants::M_COMPONENT));
         return $rec_options;
+    }
+
+    /**
+     * Has the site gone back to the old recorders, which load in an iframe from Cloud Poodll?
+     *
+     * @return bool
+     */
+    public static function use_legacy_recorders() {
+        return !empty(get_config(constants::M_COMPONENT, 'uselegacyrecorders'));
+    }
+
+    /**
+     * The skin to show, given the skin in the settings.
+     *
+     * The local recorders replace the old skins, so a site that chose an old skin gets the local
+     * recorder closest to it: once uploads straight after Stop, the rest become One Two Three. If the
+     * site uses the old recorders, old skins stay as they were and the local skins go back the other
+     * way. The setting is never changed, so turning the old recorders on or off loses nothing.
+     *
+     * @param string|false|null $skin the audioskin or videoskin setting, or empty if there is none
+     * @return string the skin to show
+     */
+    public static function effective_skin($skin) {
+        $legacy = self::use_legacy_recorders();
+        if ($legacy && !empty($skin) && !self::is_local_skin($skin)) {
+            return $skin;
+        }
+        switch ($skin) {
+            case constants::SKIN_SCREEN:
+                return $skin;
+            case constants::SKIN_ONCE:
+            case constants::SKIN_LOCALONCE:
+                return $legacy ? constants::SKIN_ONCE : constants::SKIN_LOCALONCE;
+            default:
+                return $legacy ? constants::SKIN_123 : constants::SKIN_LOCAL123;
+        }
+    }
+
+    /**
+     * Is this skin one of the local recorders, which run in Moodle instead of a Cloud Poodll iframe?
+     *
+     * @param string $skin the skin
+     * @return bool
+     */
+    public static function is_local_skin($skin) {
+        return $skin === constants::SKIN_LOCAL123 || $skin === constants::SKIN_LOCALONCE;
     }
 
     public static function get_region_options() {

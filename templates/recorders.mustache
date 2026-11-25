@@ -11,7 +11,7 @@
       {{#isvideo}}{{> tiny_poodll/videopanel}}{{/isvideo}}
       {{#isaudio}}{{> tiny_poodll/audiopanel}}{{/isaudio}}
       {{#isscreen}}{{> tiny_poodll/screenpanel}}{{/isscreen}}
-      {{^isscreen}}{{> tiny_poodll/uploadpanel}}{{/isscreen}}
+      {{^isscreen}}{{^islocal}}{{> tiny_poodll/uploadpanel}}{{/islocal}}{{/isscreen}}
       {{> tiny_poodll/optionspanel}}
       {{#showhistory}}{{> tiny_poodll/historypanel}}{{/showhistory}}
     </div>

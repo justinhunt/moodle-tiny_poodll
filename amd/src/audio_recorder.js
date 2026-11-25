@@ -46,6 +46,8 @@ export default class Audio extends BaseClass {
         var tc = super.getModalContext(editor);
         tc.isaudio=true;
         tc.recorder = 'audio'; //(audio or video or screen)
+        tc.localskin = BaseClass.localSkin(tc.CP.audioskin);
+        tc.islocal = !!tc.localskin;
         //subtitles
         if(tc.subtitleaudiobydefault==='1'){
             tc.subtitling=true;

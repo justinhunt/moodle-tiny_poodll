@@ -1,4 +1,8 @@
 <div data-medium-type="{{CSS.VIDEO}}" class="tab-pane active" id="{{elementid}}_{{CSS.VIDEO}}">
+    {{#islocal}}
+    <div id="{{elementid}}_localrecorder" class="plr-root"></div>
+    {{/islocal}}
+    {{^islocal}}
     <div id="id_responsive_tiny_poodll_video_cont">
         <div id="{{elementid}}_{{CSS.CP_VIDEO}}" class="{{CSS.CP_SWAP}}" data-iframeclass="tiny_poodll_iframe" data-id="{{elementid}}_{{CSS.CP_VIDEO}}" data-parent="{{CP.parent}}"
         data-appid="{{CP.appid}}" data-media="video" data-type="{{#isscreen}}screen{{/isscreen}}{{^isscreen}}{{CP.videoskin}}{{/isscreen}}"
@@ -8,4 +12,5 @@
         data-expiredays="{{CP.expiredays}}" data-region="{{CP.region}}" data-owner="{{CP.owner}}" data-token="{{CP.token}}" data-fallback="{{CP.fallback}}">
         </div>
     </div>
+    {{/islocal}}
 </div>

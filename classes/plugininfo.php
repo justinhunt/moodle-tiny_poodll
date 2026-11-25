@@ -122,8 +122,9 @@ class plugininfo extends plugin implements plugin_with_configuration, plugin_wit
         $cloudpoodll['cp_language'] = $config->language;
         $cloudpoodll['cp_expiredays'] = $config->expiredays;
         $cloudpoodll['cp_transcode'] = $config->transcode;
-        $cloudpoodll['cp_audioskin'] = $config->audioskin;
-        $cloudpoodll['cp_videoskin'] = $config->videoskin;
+        $cloudpoodll['cp_audioskin'] = utils::effective_skin($config->audioskin);
+        $cloudpoodll['cp_videoskin'] = utils::effective_skin($config->videoskin);
+        $cloudpoodll['contextid'] = $context->id;
         $cloudpoodll['cp_fallback'] = $config->fallback;
         $cloudpoodll['cp_cloudpoodllurl'] = utils::get_cloud_poodll_server();
         $cloudpoodll['cp_owner'] = hash('md5', $USER->username);

@@ -23,6 +23,8 @@
 
 
 import Log from 'core/log';
+import ModalEvents from 'core/modal_events';
+import {init as initLocalRecorder} from 'tiny_poodll/localrecorder/skin_123';
 import {getConfig} from './options';
 
 import * as Templates from 'core/templates';
@@ -140,7 +142,7 @@ export default class {
                 switch(dropdown.id){
                     case that.elementid + '_' + CSS.LANG_SELECT:
                         //TO DO - save this value, or leave it as is ... do we need to keep track of it, for insert method?
-                        that.config.CP.language =dropdown.get('value');
+                        that.config.CP.language = dropdown.value;
                         recorders.forEach((recorder) => {
                             recorder.setAttribute('data-language', that.config.CP.language);
                             recorder.setAttribute('data-alreadyparsed', 'false');
@@ -149,7 +151,7 @@ export default class {
                         that.loadRecorders();
                         break;
                     case that.elementid + '_' + CSS.EXPIREDAYS_SELECT:
-                        //do something
+                        that.config.CP.expiredays = dropdown.value;
                         recorders.forEach((recorder) => {
                             recorder.setAttribute('data-expiredays', that.config.CP.expiredays);
                             recorder.setAttribute('data-alreadyparsed', 'false');
@@ -162,6 +164,86 @@ export default class {
 
         });
 
+    }
+
+    /**
+     * Which of the new recorders a skin setting asks for, if any.
+     *
+     * @param {String} skin the audio or video skin from the settings
+     * @returns {String|null}
+     */
+    static localSkin(skin) {
+        return skin === SKIN.LOCAL123 || skin === SKIN.LOCALONCE ? skin : null;
+    }
+
+    /**
+     * Start the new recorder, which runs in the page instead of an iframe from Cloud Poodll.
+     *
+     * The dialog's options can change until the recording is uploaded, so the upload arguments are
+     * kept in one object that is updated as they change. The server checks each of them again.
+     */
+    async loadLocalRecorder() {
+        const root = this.modalRoot.querySelector('#' + this.elementid + '_localrecorder');
+        if (!root) {
+            return;
+        }
+        const wsargs = {
+            contextid: this.config.contextid,
+            mediatype: this.config.recorder,
+            subtitle: !!this.config.subtitling,
+            language: this.config.CP.language,
+            expiredays: parseInt(this.config.CP.expiredays, 10) || 0,
+        };
+        this.modalRoot.addEventListener('change', (e) => {
+            switch (e.target.id) {
+                case this.elementid + '_' + CSS.SUBTITLE_CHECKBOX:
+                    wsargs.subtitle = e.target.checked;
+                    break;
+                case this.elementid + '_' + CSS.LANG_SELECT:
+                    wsargs.language = e.target.value;
+                    break;
+                case this.elementid + '_' + CSS.EXPIREDAYS_SELECT:
+                    wsargs.expiredays = parseInt(e.target.value, 10) || 0;
+                    break;
+            }
+        });
+        root.addEventListener('localrecorder', (e) => {
+            const evt = e.detail || {};
+            if (evt.type === 'recording') {
+                // Subtitles are asked for when the recording is uploaded, so stop changes after that.
+                const subtitlecheckbox = this.getElement(CSS.SUBTITLE_CHECKBOX);
+                if (subtitlecheckbox !== null) {
+                    subtitlecheckbox.disabled = true;
+                }
+            } else if (evt.type === 'awaitingprocessing') {
+                // The new recorders always convert to mp3 or mp4.
+                this.config.transcoding = true;
+                if (this.history) {
+                    this.history.saveHistoryItem(evt.mediaurl, evt.mediafilename, evt.sourceurl, evt.sourcemimetype);
+                }
+                this.doInsert(evt.mediaurl, evt.mediafilename, evt.sourceurl, evt.sourcemimetype);
+            }
+        });
+        this.localrecorder = await initLocalRecorder({
+            rootid: root.id,
+            component: component,
+            wsfunction: 'tiny_poodll_fetch_upload_details',
+            wsargs: wsargs,
+            mediatype: this.config.recorder,
+            timelimit: 0,
+            allowpause: true,
+            // The new recorder has its own "upload a file instead", so there is no Upload tab.
+            allowupload: !!this.config.showupload,
+            asktouse: this.config.localskin === SKIN.LOCAL123,
+            noaudiofilters: false,
+        });
+        // The dialog is removed when it closes, so let go of the microphone and camera then.
+        this.modal.getRoot().on(ModalEvents.hidden, () => {
+            if (this.localrecorder) {
+                this.localrecorder.destroy();
+                this.localrecorder = null;
+            }
+        });
     }
 
     /**
@@ -373,6 +455,8 @@ export default class {
         context.CP.fallback = config.fallback;
         context.CP.cloudpoodllurl = config.cp_cloudpoodllurl;
         context.CP.sizes = this.fetchRecorderDimensions(config);
+        context.contextid = config.contextid;
+        context.islocal = false;
 
         //get defaults for expire days and subtitle language
         context['expire_' + config.cp_expiredays] =true;
@@ -397,7 +481,11 @@ export default class {
         recorder.loadRecorders();
         recorder.initHistory();
 
-        modal.show();
+        await modal.show();
+        // The new recorder looks for its place in the page, so start it once the dialog is there.
+        if (templatecontext.islocal) {
+            recorder.loadLocalRecorder();
+        }
         return modal;
     }
 }
