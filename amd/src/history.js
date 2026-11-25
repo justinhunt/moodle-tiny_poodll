@@ -184,7 +184,7 @@ export default class {
         var config = that.recorder.config;
         return Ajax.call([{
             methodname: 'tiny_poodll_history_get_items',
-            args: {'recordertype': config.recorder},
+            args: {'recordertype': config.recorder, 'contextid': config.contextid},
             async: false, //this means the function is blocking
         }])[0];
     }
@@ -211,6 +211,7 @@ export default class {
                 sourcemimetype: sourcemimetype,
                 subtitling: that.recorder.config.subtitling ? 1 : 0,
                 subtitleurl: that.recorder.config.subtitling ? mediaurl + '.vtt' : '',
+                contextid: that.recorder.config.contextid,
             },
         }])[0];
     }
@@ -250,7 +251,7 @@ export default class {
 
             Ajax.call([{
                 methodname: 'tiny_poodll_history_archive',
-                args: {'id': historyItemId},
+                args: {'id': historyItemId, 'contextid': that.recorder.config.contextid},
                 done: function() {
                     // Remove the parent row from the DataTable and redraw
                     dtparentrow.remove().draw();

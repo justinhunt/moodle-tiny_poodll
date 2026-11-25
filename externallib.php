@@ -64,7 +64,8 @@ class tiny_poodll_history_external extends external_api {
         $mediaurl,
         $sourcemimetype,
         $subtitling = 0,
-        $subtitleurl = null
+        $subtitleurl = null,
+        $contextid = 0
     ) {
         global $USER, $COURSE;
 
@@ -76,15 +77,12 @@ class tiny_poodll_history_external extends external_api {
                 'mediaurl' => $mediaurl,
                 'sourcemimetype' => $sourcemimetype,
                 'subtitling' => $subtitling,
-                'subtitleurl' => $subtitleurl
+                'subtitleurl' => $subtitleurl,
+                'contextid' => $contextid,
             ));
 
+        self::validate_history_context($params['contextid']);
         $context = context_user::instance($USER->id);
-        self::validate_context($context);
-
-        if (!has_capability('tiny/poodll:visible', $context)) {
-            throw new moodle_exception('notavailable');
-        }
 
         $item = new stdClass();
         $item->userid = $USER->id;
@@ -139,20 +137,46 @@ class tiny_poodll_history_external extends external_api {
             'mediaurl' => new external_value(PARAM_URL, 'Media URL'),
             'sourcemimetype' => new external_value(PARAM_TEXT, 'Source mimetype'),
             'subtitling' => new external_value(PARAM_INT, 'Subtitling enabled', VALUE_DEFAULT,0),
-            'subtitleurl' => new external_value(PARAM_URL, 'Subtitle URL', VALUE_DEFAULT,'')
+            'subtitleurl' => new external_value(PARAM_URL, 'Subtitle URL', VALUE_DEFAULT,''),
+            'contextid' => new external_value(PARAM_INT, 'The context of the editor', VALUE_DEFAULT, 0),
         ));
     }
 
     public static function archive_history_item_parameters() {
         return new external_function_parameters(array(
-            'id' => new external_value(PARAM_INT, 'ID to be archived')
+            'id' => new external_value(PARAM_INT, 'ID to be archived'),
+            'contextid' => new external_value(PARAM_INT, 'The context of the editor', VALUE_DEFAULT, 0),
         ));
     }
 
     public static function get_history_item_parameters() {
         return new external_function_parameters(array(
-            'id' => new external_value(PARAM_INT, 'ID requested')
+            'id' => new external_value(PARAM_INT, 'ID requested'),
+            'contextid' => new external_value(PARAM_INT, 'The context of the editor', VALUE_DEFAULT, 0),
         ));
+    }
+
+    /**
+     * Check that the user may use Tiny Poodll where the editor is.
+     *
+     * The history holds the user's own recordings from every editor, but whether they may use Tiny
+     * Poodll depends on where the editor is, as it does for the toolbar buttons. Course roles such as
+     * student do not reach the user's own context, so checking only there refused most students.
+     * Callers that send no context get that older check.
+     *
+     * @param int $contextid The context of the editor, or 0.
+     */
+    protected static function validate_history_context($contextid) {
+        global $USER;
+        if ($contextid) {
+            $context = context::instance_by_id($contextid);
+        } else {
+            $context = context_user::instance($USER->id);
+        }
+        self::validate_context($context);
+        if (!has_capability('tiny/poodll:visible', $context)) {
+            throw new moodle_exception('notavailable');
+        }
     }
 
     public static function archive_history_item_returns() {
@@ -162,7 +186,11 @@ class tiny_poodll_history_external extends external_api {
     /**
      * @param $itemid Item ID to archive.
      */
-    public static function archive_history_item($itemid) {
+    public static function archive_history_item($itemid, $contextid = 0) {
+        $params = self::validate_parameters(self::archive_history_item_parameters(),
+            ['id' => $itemid, 'contextid' => $contextid]);
+        self::validate_history_context($params['contextid']);
+        $itemid = $params['id'];
         $history = new tiny_poodll\history();
         $history->archive($itemid);
     }
@@ -170,7 +198,11 @@ class tiny_poodll_history_external extends external_api {
     /**
      * @param $itemid Item ID to get.
      */
-    public static function get_history_item($itemid) {
+    public static function get_history_item($itemid, $contextid = 0) {
+        $params = self::validate_parameters(self::get_history_item_parameters(),
+            ['id' => $itemid, 'contextid' => $contextid]);
+        self::validate_history_context($params['contextid']);
+        $itemid = $params['id'];
         $history = new tiny_poodll\history();
         $data = $history->get_item($itemid);
 
@@ -187,15 +219,11 @@ class tiny_poodll_history_external extends external_api {
      * @throws moodle_exception
      * @throws restricted_context_exception
      */
-    public static function get_history_items($recordertype = '') {
-        global $USER;
-
-        $context = context_user::instance($USER->id);
-        self::validate_context($context);
-
-        if (!has_capability('tiny/poodll:visible', $context)) {
-            throw new moodle_exception('notavailable');
-        }
+    public static function get_history_items($recordertype = '', $contextid = 0) {
+        $params = self::validate_parameters(self::get_history_items_parameters(),
+            ['recordertype' => $recordertype, 'contextid' => $contextid]);
+        self::validate_history_context($params['contextid']);
+        $recordertype = $params['recordertype'];
         $history = new tiny_poodll\history();
 
         return $history->get($recordertype);
@@ -251,7 +279,8 @@ class tiny_poodll_history_external extends external_api {
     public static function get_history_items_parameters() {
         return new external_function_parameters(
             array(
-                'recordertype' => new external_value(PARAM_TEXT, 'recordertype')
+                'recordertype' => new external_value(PARAM_TEXT, 'recordertype'),
+                'contextid' => new external_value(PARAM_INT, 'The context of the editor', VALUE_DEFAULT, 0),
             )
         );
     }
