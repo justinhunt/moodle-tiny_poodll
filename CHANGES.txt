@@ -1,9 +1,6 @@
 Version 1.0.17 (Build 2026112500)
 - New audio and video recorders that run in Moodle instead of a frame from Cloud Poodll: One Two Three and Once
 - Sites with the old skins use the new recorders: Once becomes the new Once and the others become the new One Two Three
-- Added a Use the old recorders site setting to go back to the Cloud Poodll recorders
-- With the new recorders, files are uploaded from the recorder ("Upload a file instead") instead of an Upload tab
-- The Screen recorder still uses Cloud Poodll's
 - Fixed the language and expiry choices in the Options tab not being used
 - Fixed recordings not being saved to History for most students: History now checks permission where the editor is, not in the user's own profile
 
